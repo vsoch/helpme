@@ -1,0 +1,159 @@
+# The helpme Protocol
+
+Although this document mainly talks about helpers, everything here also applies to doers, *except* when an exception is explicitly noted.
+
+# Finding Your Helper
+
+When helpme runs, it builds an ordered list of helpers.  This ordered list is built 
+
+1. List all of the files (*just* files, *not* directories) that are in `/var/lib/helpme/in`.
+
+2. Remove all files that are not readable *and* executable by the current user.
+
+3. ASCII-sort the list.
+
+The process for doers is the same, except the directory listed is `/var/lib/helpme/doers`.
+
+Subdirectories are intentionally ignored.  This is a good place to put other helpers that should be run conditionally.
+
+For example, let's say you have a series of SLURM-related helpers.  You could have all of them in a directory called `/var/lib/helpme/in/slurm`, and then have a helper at path `/var/lib/helpme/in/30slurm`.  The `slurm` directory will be ignored, but the `30slurm` helper will be run.  When `30slurm` runs, it can use the `PUSHHELPER` and `PUSHHELPERDIR` messages to have helpme run helpers located in the `/var/lib/helpme/in/slurm` directory.
+
+# How helpers are run
+
+Helpers are run by the `helpme` program, as sub-processes of `helpme`.  In other words, when helpme needs to run a helper, helpme...
+
+1. Creates a socket-pair for parent-child communication.
+
+2. Forks itself.
+
+3. The child closes various file descriptors (except for 0-2 plus the socket), and gets the file descriptor number for the socket.
+
+4. The child `exec`s the helper, passing the socket's file descriptor number as the only command-line parameter.
+
+5. The parent watches for messages from the socket, while also logging standard error traffic to a log.  Standard input and standard output are not touched, allowing the helper to communicate directly with the end user.
+
+6. When the helper exits, helpme cleans up the socket, flushes any remaining output, and drains any unprocessed input, before moving on to the next helper.
+
+The helper's environment is copied unmodified from `helpme`, and file descriptors 0 (standard input) and 1 (standard output) are connected directly to the end user.  As for file descriptor 2 (standard error), you can write to it, but writes will not be seen by the user.  Instead, helpme will log them.
+
+In addition to the three standard file descriptors, there will be one more file descriptor open.  The file descriptor number will be passed as the first (and only) command-line argument; its value will be at least 3, and less than the number read from `/proc/sys/file-max`.  This file descriptor will be connected to an already-open socket (actually, one end of a socketpair).  This is how you communicate with helpme.
+
+Although a socket is being used, you don't need to think about that, because all the setup work was done for you.  You can use whatever functions your language provides for interacting with a file descriptor.  However, it is strongly suggested that you only use unbuffered reads and writes, because this is a bi-directional connection, not a file.
+
+# The helpme Protocol
+
+The helpme protocol 
+
+This protocol is a binary protocol.  Although it will look like the data being exchanged is all text, calling it a text protocol required that things like encodings be specified.  For that reason, this is a binary protocol.
+
+Messages from the helper to helpme take the following form:
+
+    <SOH>COMMAND<EOT>
+
+    <SOH>COMMAND<STX>DATA<EOT>
+    
+The first type of message is used for messages that just have a single command (like `VERSION`).  The second type of message is for when a command also has data associated with it.  `<SOH>` is the "Start of Heading" ASCII character (code 0x01), `<STX>` is the "Start of Text" ASCII character (cdoe 0x02), and `<EOT>` is the "End of Transmission" ASCII character (code 0x04).
+
+Responses from helpme take the following form:
+
+    <SOH>CODE<EOT>
+
+    <SOH>CODE<STX>DATA<EOT>
+
+In both cases, `CODE` is a stringified number.  If the number is zero, then the message was received/executed successfully.  If there is data, then the second form is used.
+
+# Protocol Messages
+
+The helpme protocol recognizes the following messages:
+
+## General Messages
+
+### VERSION
+
+    Helper: `VERSION\n`
+    helpme: `0\t1\n`
+
+### REV
+
+    Helper: `REV\n`
+    helpme: `0\t20161024\n`
+
+Returns the message list revision number.  Each time new protocol messages are added, this number is increased.
+
+This is a way for the helper to know if a particular protocol message will be supported.
+
+### MYNAME
+
+    Helper: `MYNAME\n`
+    helpme: `0\t10environment\n`
+
+Returns the name of the helper that is being run right now.
+
+### TMPDIR
+
+    Helper: `TMPDIR\n`
+    helpme: `0\t/tmp/54FMKm4_helpme`
+
+Returns the absolute path to the temporary directory where files should be stored.
+
+# Helper List Inspection and Control
+
+### HELPERLIST
+
+    Helper: `HELPERLIST\n`
+    helpme: `0\t00something\t01somethingelse\t...\n`
+
+Returns the list of helpers that helpme knows about.  This list is the concatenation of the output from three messages: HELPERSRUN, MYNAME, and HELPERSFUTURE.
+
+### HELPERSRUN
+
+    Helper: `HELPERSRUN\n`
+    helpme: `0\t00something\n`
+
+Returns the ordered list of helpers that have been run, in the order that they were run (so that last item in the list is the helper that ran before you).
+
+### HELPERSFUTURE
+
+    Helper: `HELPERLIST\n`
+    helpme: `0\t00something\t01somethingelse\t...\n`
+
+Returns the ordered list of helpers that have not yet been run (so the first item in the list is the next helper to run).
+
+### PUSHHELPER
+
+    Helper: `PUSHELPER\t31slurm_environment\n`
+    helpme: `0\n`
+
+Tells helpme to run the given helper next.  If you take the list of not-yet-run helpers, and think of it as a stack, this pushes a helper on to the stack.
+
+If the specified helper is already in the stack, it is moved up to the top.
+
+### PUSHHELPERDIR
+
+    Helper: `PUSHHELPERDIR\tslurm_helpers\n`
+    helpme: `0\n`
+
+Given a directory, helpme will scan the directory, just like it scanned the `/var/lib/helpme/in` directory.  All of the readable & executable files found will be sorted, and that sorted list pushed onto the list of helpers to run.  You can also think of it as prepending the new list to the existing list.
+
+If you have an entire directory of helpers that need to be run, this saves you from having to send multiple `PUSHHELPER` messages.
+
+### POPHELPER
+
+    Helper: `POPHELPER\t20environment\n`
+    helpme: `0\n`
+
+Given the name of a not-yet-run helper, removes that helper from the list of helpers to be run.
+
+Note that just because it was removed, doesn't mean that another helper won't add it back later!
+
+## File Management
+
+### ADDFILE
+
+### TOUCHFILE
+
+### DELFILE
+
+## Helper Settings
+
+### GETCONFIG
