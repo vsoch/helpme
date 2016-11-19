@@ -9,4 +9,8 @@ setup(name='helpme',
       author_email='vsochat@stanford.edu',
       url='https://www.github.com/researchapps/helpme',
       packages=['helpme'],
-      )
+      entry_points = {
+        'console_scripts': [
+            'helpme=helpme.scripts:main',
+        ],
+      })
