@@ -5,16 +5,10 @@ import codecs
 import os
 
 
+# HELPER FUNCTIONS #############################################################
 
-##########################################################################################
-# HELPER FUNCTIONS #######################################################################
-##########################################################################################
 
 def get_lookup():
-    '''get version by way of singularity.version, returns a 
-    lookup dictionary with several global variables without
-    needing to import singularity
-    '''
     lookup = dict()
     version_file = os.path.join('helpme', 'version.py')
     with open(version_file) as filey:
@@ -62,9 +56,8 @@ LICENSE = lookup['LICENSE']
 with open('README.md') as filey:
     LONG_DESCRIPTION = filey.read()
 
-##########################################################################################
-# MAIN ###################################################################################
-##########################################################################################
+
+# MAIN #########################################################################
 
 
 if __name__ == "__main__":
@@ -95,7 +88,6 @@ if __name__ == "__main__":
               'Topic :: Software Development',
               'Topic :: Scientific/Engineering',
               'Operating System :: Unix',
-              'Programming Language :: Python :: 2.7',
               'Programming Language :: Python :: 3',
           ],
-          entry_points = {'console_scripts': [ 'helpme=helpme.scripts:main' ] })
+          entry_points = {'console_scripts': [ 'helpme=helpme.client:main' ] })

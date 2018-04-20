@@ -4,7 +4,6 @@ from .terminal import (
     which
 )
 from .fileio import (
-    clean_up,
     copyfile,
     get_userhome,
     mkdir_p,
@@ -13,4 +12,7 @@ from .fileio import (
     read_json,
     write_file,
     write_json
+)
+from .settings import (
+    get_configfile
 )
