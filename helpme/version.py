@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-__version__ = "0.1"
+__version__ = "0.0.1"
 AUTHOR = 'Vanessa Sochat'
 AUTHOR_EMAIL = 'vsochat@stanford.edu'
 NAME = 'helpme'
@@ -41,7 +41,7 @@ LICENSE = "LICENSE"
 
 
 INSTALL_REQUIRES = (
-    ('gogs_client', {'min_version': '1.0.6'}),
+    ('aiohttp', {'min_version': None}),
     ('requests', {'min_version': '2.12.4'}),
     ('retrying', {'min_version': '1.3.3'})
 )

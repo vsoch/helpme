@@ -16,7 +16,7 @@ def get_lookup():
     needing to import singularity
     '''
     lookup = dict()
-    version_file = os.path.join('expfactory', 'version.py')
+    version_file = os.path.join('helpme', 'version.py')
     with open(version_file) as filey:
         exec(filey.read(), lookup)
     return lookup
