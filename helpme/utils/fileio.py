@@ -22,6 +22,7 @@ import errno
 import os
 import pwd
 import re
+import tempfile
 import json
 import io
 import sys
@@ -68,6 +69,20 @@ def read_config(filename):
 
 
 # FILE OPERATIONS ##############################################################
+
+def generate_temporary_file(folder='/tmp', prefix='helpme', ext='json'):
+    '''write a temporary file, in base directory with a particular extension.
+      
+       Parameters
+       ==========
+       folder: the base directory to write in. 
+       prefix: the prefix to use
+       ext: the extension to use.
+
+    '''        
+    tmp = next(tempfile._get_candidate_names())
+    return '%s/%s.%s.%s' %(folder, prefix, tmp, ext)
+
 
 def copyfile(source, destination, force=True):
     '''copy a file from a source to its destination.

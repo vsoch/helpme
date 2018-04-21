@@ -6,6 +6,7 @@ from .terminal import (
 from .fileio import (
     copyfile,
     get_userhome,
+    generate_temporary_file,
     mkdir_p,
     print_json,
     read_file,
