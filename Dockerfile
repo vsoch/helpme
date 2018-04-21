@@ -4,9 +4,9 @@ FROM continuumio/miniconda3
 
 RUN mkdir /code
 ADD . /code
-RUN /opt/conda/bin/pip install setuptools aiohttp && \
-    /opt/conda/bin/pip install ipython && \
-    /opt/conda/bin/pip install cchardet && \
+RUN /opt/conda/bin/pip install setuptools && \
+    /opt/conda/bin/pip install pip --upgrade && \
+    /opt/conda/bin/pip install -r requirements.txt && \
     cd /code && /opt/conda/bin/python setup.py install
 
 ENTRYPOINT ["helpme"]

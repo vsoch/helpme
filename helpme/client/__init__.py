@@ -21,6 +21,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
+from helpme.logger import bot
+from helpme.defaults import HELPME_HELPERS
 import helpme
 import argparse
 import sys
@@ -34,6 +36,10 @@ def get_parser():
 
     parser.add_argument('--debug', dest="debug", 
                         help="use verbose logging to debug.", 
+                        default=False, action='store_true')
+
+    parser.add_argument('--version', dest="version", 
+                        help="show version and exit.", 
                         default=False, action='store_true')
 
     parser.add_argument('--quiet', dest="quiet", 
@@ -51,11 +57,6 @@ def get_parser():
 
     ls = subparsers.add_parser("list",
                                help="show installed helpers")
-
-    # print version and exit
-
-    version = subparsers.add_parser("version",
-                                    help="show software version")
  
     config = subparsers.add_parser("config",
                                    help="configure a helper")
@@ -64,8 +65,8 @@ def get_parser():
                         help="interactive configuration", 
                         default=False, action='store_true')
 
-    # TODO: import choices here?
-    parser.add_argument('client', choices=['github', 'uservoice'])
+    parser.add_argument('client', nargs='?',
+                        choices=HELPME_HELPERS)
 
     return parser
 
@@ -92,9 +93,9 @@ def main():
        the user can request help or set config values for a particular helper.
     '''
 
-    # Customize parser depending on client
+    # Customize parser
 
-    from helpme.main import Client as cli
+    from helpme.main import Helper
     parser = get_parser()
     subparsers = get_subparsers(parser)
 
@@ -105,7 +106,10 @@ def main():
 
         version = helpme.__version__
         
-        print("\nHelpMe Command Line Tool v%s [%s]" %(version, name))
+        bot.custom(message='HelpMe Command Line Tool v%s' %version,
+                   prefix='\n[%s]' %Helper.name, 
+                   color='CYAN')
+
         parser.print_help()
         sys.exit(return_code)
     
@@ -123,7 +127,7 @@ def main():
         os.environ['MESSAGELEVEL'] = "INFO"
 
     # Show the version and exit
-    if args.command == "version":
+    if args.version is True:
         print(helpme.__version__)
         sys.exit(0)
 

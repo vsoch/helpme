@@ -18,13 +18,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
 from helpme.logger import bot
+from helpme.defaults import HELPME_HELPERS
 import sys
 import pwd
 import os
 
 
-def main(args,parser,subparser):
-    from helpme.main import Helper
-    
-    print('This will list installed helpers, and detail if name provided')
+def main(args, parser, subparser):
+    '''print the listing of helpers installed, defined by the HELPME_HELPERS
+       variable in the default settings flie, and then exit.
+    '''    
+    bot.info('Helpers Installed:')
+    print('\n'.join(HELPME_HELPERS))
     

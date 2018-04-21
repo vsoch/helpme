@@ -29,7 +29,7 @@ from .headers import (
 from .http import ( 
     call, delete, download, get, head, healthy, 
     paginate_get, post, put, stream, 
-    stream_response, verify
+    stream_response
 )
 
 from .settings import (
@@ -48,6 +48,7 @@ class HelperBase(object):
 
     def __init__(self):
  
+        self.name = 'github'
         self._load_config()
 
     def start(self):
@@ -83,10 +84,6 @@ class HelperBase(object):
     def __str__(self):
         return "[helper|%s]" %self.name
 
-
-# Actions
-HelperBase.start = start
-HelperBase.submit = submit
 
 # Settings
 HelperBase._load_config = load_config

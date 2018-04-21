@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 from helpme.utils import (
-    get_installdir
+    get_installdir,
     mkdir_p,
     read_json,
     write_json

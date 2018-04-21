@@ -20,6 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
+from .base import HelperBase
+
+
 def get_helper(quiet=False, **kwargs):
     '''
        get the correct helper depending on the environment variable
@@ -38,14 +41,11 @@ def get_helper(quiet=False, **kwargs):
     Helper.name = HELPME_CLIENT
     Helper.quiet = quiet
 
-    # Create credentials cache, if it doesn't exist
-    Helper._credential_cache = get_credential_cache()
-
     from helpme.action import ( record, config )
-    Helper.add = add
-    Helper._init_db = init_db        
+    Helper.record = record
+    Helper.config = config
 
     # Initialize the database
     return Helper()
 
-Helper = get_client()
+Helper = get_helper()
