@@ -84,14 +84,3 @@ case that nothing is set.
 $ helper._get_and_update_setting('HELPME_GITHUB_DOESNTEXIST', 'default')
 'default'
 ```
-
-self.setting
-Out[8]: '524f31c1727cb0f75d0a388bdee300f77251ff5f'
-
-In [9]: self._get_setting('HELPME_GITHUB_TOKEN')
-Out[9]: '524f31c1727cb0f75d0a388bdee300f77251ff5f'
-
-In [10]: self._get_settings()
-Out[10]: <Section: github>
-
-
