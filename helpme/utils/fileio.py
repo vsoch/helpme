@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
+import configparser
 import errno
 import os
 import pwd
@@ -48,6 +49,22 @@ def mkdir_p(path):
             bot.error("Error creating path %s, exiting." % path)
             sys.exit(1)
 
+# CONFIG OPERATIONS ############################################################
+
+def write_config(filename, config, mode="w"):
+    '''use configparser to write a config object to filename
+    '''
+    with open(filename, mode) as filey:
+        config.write(filey)
+    return filename
+
+
+def read_config(filename):
+    '''use configparser to write a config object to filename
+    '''
+    config = configparser.ConfigParser()
+    config.read(filename)
+    return config
 
 
 # FILE OPERATIONS ##############################################################

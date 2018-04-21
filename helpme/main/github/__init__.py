@@ -18,11 +18,28 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
 from helpme.main import HelperBase
+from helpme.action import record_asciinema
 
 class Helper(HelperBase):
 
-    def __init__(self, secrets=None, base=None, **kwargs):
+    def __init__(self, **kwargs):
  
         self.name = "github"
 
         super(HelperBase, self).__init__(**kwargs)
+
+    def load_secrets(self):
+
+        self.token = self._get_and_update_setting('HELPME_GITHUB_TOKEN')
+
+        if self.token is None:
+            bot.error('You must export HELPME_GITHUB_TOKEN to use Github')
+            print('https://researchapps.github.io/helpme/helper-github')
+            sys.exit(1)
+
+    def _start(self):
+        print('Start the helper flow.')
+
+    def _submit(self):
+        print('Submit the Helper flow....')
+

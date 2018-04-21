@@ -2,3 +2,4 @@ asciinema
 aiohttp
 ipython
 cchardet
+pygithub

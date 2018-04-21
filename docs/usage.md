@@ -42,4 +42,3 @@ Interactive help from a specific helper (e.g., Github helper):
 ```bash
 $ helpme github
 ```
-

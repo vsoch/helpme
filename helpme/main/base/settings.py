@@ -17,12 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
-
+from helpme.logger import RobotNamer
 from helpme.utils import (
     get_installdir,
     mkdir_p,
-    read_json,
-    write_json
+    read_config,
+    write_config
 )
 import configparser
 import json
@@ -31,77 +31,54 @@ import re
 import sys
 
 
+# Config File (User and System) ################################################
+
 def get_configfile():
     '''return the full path to the configuration file
     '''
     return os.path.abspath(os.path.join(get_installdir(), 'helpme.cfg'))
 
 
-def load_config(name):
-    '''load config should load the global helpme configuration, and update
-       with user configurations from $HOME/helpme.cfg
-    '''
-    print('WRITEME')
-
-
-def update_client_secrets(helper, updates, secrets=None, save=True):
-    '''update client secrets will update the data structure for a particular
-       authentication. This should only be used for a (quasi permanent) token
-       or similar. The secrets file, if found, is updated and saved by default.
-    '''
-    if secrets is None:
-        secrets = read_client_secrets()
-    if helper not in secrets:
-        secrets[helper] = {}
-    secrets[helper].update(updates)
-
-    # The update typically includes a save
-
-    if save is True:
-        secrets_file = _get_secrets_file()
-        if secrets_file is not None:
-            write_json(secrets, secrets_file)
-
-    return secrets
-
-
-def read_client_secrets():
-    '''If no secrets are found, we use default github helper
-    '''
-    secrets = get_secrets_file()
-    if secrets is not None:
-        client_secrets = read_json(secrets)
-
-    return client_secrets
-
-
-def get_secrets_file():
-    '''Sniff the environment and standard location for client
-       secrets file. Otherwise, return None
+def get_configfile_user():
+    '''return the full path for the user configuration file. If doesn't
+       exist, create it for the user.
     '''
     from helpme.defaults import HELPME_CLIENT_SECRETS
-    if os.path.exists(HELPME_CLIENT_SECRETS):
-        return HELPME_CLIENT_SECRETS
+
+    # The inital file has a funny username
+
+    if not os.path.exists(HELPME_CLIENT_SECRETS):
+        bot.debug('Generating settings file at %s' %HELPME_CLIENT_SECRETS)
+        name = RobotNamer().generate()
+
+        # Generate the user config
+
+        config = configparser.ConfigParser()
+        config['DEFAULT'] = {'Alias': name }
+        write_config(HELPME_CLIENT_SECRETS, config)
+
+    return HELPME_CLIENT_SECRETS
 
 
+def load_config_user():
+    '''Get and load the file. This function is the primary point of interaction
+       between the get_configfile_user and various get/set settings functions.
+    '''
+    configfile = get_configfile_user()
+    if os.path.exists(configfile):
+        return read_config(configfile)
+       
 
-# Secrets and Settings
-
-
-def get_settings(self, client_name=None):
-    '''get all settings, either for a particular client if a name is provided,
-       or across clients.
-
-       Parameters
-       ==========
-       client_name: the client name to return settings for (optional)
+def load_config():
+    '''load config should load the global helpme configuration, and update
+       with user configurations from $HOME/helpme.cfg
 
     '''
-    settings = read_client_secrets()
-    if client_name is not None and client_name in settings:
-        return settings[client_name]           
-    return settings
+    configfile = get_configfile()
+    bot.info(configfile)
 
+
+# Get and Update ###############################################################
 
 def get_setting(self, name, default=None):
     '''return a setting from the environment (first priority) and then
@@ -111,22 +88,65 @@ def get_setting(self, name, default=None):
        ==========
        name: they key (index) of the setting to look up
        default: (optional) if not found, return default instead.
+
     ''' 
 
     # First priority is the environment
+
     setting = os.environ.get(name)
 
     # Second priority is the secrets file
+
     if setting is None:
-        secrets = read_client_secrets()
-        if self.client_name in secrets:
-            secrets = secrets[self.client_name]
-            if name in secrets:
-                setting = secrets[name]
+
+        config = load_config_user()
+
+        if self.name in config:
+            if name in config[self.name]:
+                setting = config[self.name][name]
+
+    # Third priority, return a default
 
     if setting is None and default is not None:
         setting = default
+
     return setting
+
+
+
+def get_settings(self):
+    '''get all settings for a client, if defined in config.
+    '''
+    config = load_config_user()
+    if self.name in config:
+        return config[self.name]           
+
+
+def update_settings(helper, updates, config=None):
+    '''update client secrets will update the data structure for a particular
+       authentication. This should only be used for a (quasi permanent) token
+       or similar. The secrets file, if found, is updated and saved by default.
+
+       Parameters
+       ==========
+       helper: the name of the helper to look up in the config
+       updates: a dictionary of key:value pairs to add to the config
+       config: a configparser.ConfigParser(), if already loaded
+
+    '''
+    if config is None:
+        config = load_config_user()
+
+    if helper not in config:
+        config[helper] = {}
+
+    config[helper].update(updates)
+
+    # Update the saved file
+
+    configfile = get_configfile_user()
+    write_config(configfile, config)
+    return config
 
 
 def get_and_update_setting(self, name, default=None):
@@ -153,17 +173,6 @@ def get_and_update_setting(self, name, default=None):
     # If the setting is found, update the client secrets
     if setting is not None:
         updates = {name : setting}
-        update_client_secrets(backend=self.client_name, 
-                              updates=updates)
+        update_settings(self.name, updates)
 
     return setting
-
-
-def update_setting(self, name, value):
-    '''Just update a setting, doesn't need to be returned.
-    ''' 
-
-    if value is not None:
-        updates = {name : value}
-        update_client_secrets(backend=self.client_name, 
-                              updates=updates)

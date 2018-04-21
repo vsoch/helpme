@@ -17,6 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
+from helpme.logger import bot
 from .auth import ( auth_flow )
 
 from .headers import (
@@ -36,8 +37,7 @@ from .settings import (
     get_setting,
     get_settings,
     get_and_update_setting,
-    load_config,
-    update_setting
+    load_config
 )
 
 import os
@@ -46,16 +46,54 @@ import sys
 
 class HelperBase(object):
 
-    def __init__(self):
+    def __init__(self, name=None):
  
-        self.name = 'github'
+        self.name = 'github' or name
         self._load_config()
+        self.load_secrets()
+
+    def load_secrets(self):
+        '''the subclass helper should implement this function to load 
+           environment variables, etc. from the user.
+        '''
+        pass
+
+
+# Actions
+
+    def run(self):
+        '''run the entire helper procedure, including:
+
+             - start: initialize the helper, collection preferences
+             - record: record any relevant features for the environment / session
+             - interact: interact with the user for additional informatoin
+             - submit: submit the completed request
+ 
+             Each of the above functions for a helper can determine global
+             collection preferences from the system helpme.cfg in the module
+             root. After performing global actions, each function then calls
+             a class specific function of the same name (e.g., start calls
+             _start) that is implemented by the helper class to do custom
+             operations for the helper.
+
+             
+
+        '''
 
     def start(self):
-        print('Start the helper flow.')
+        '''start the helper flow. We check helper system configurations to
+           determine components that should be collected for the submission.
+        '''
+        self.speak()
+        self._start()
 
     def submit(self):
-        print('Submit the Helper flow....')
+        '''submit is the final call to submit the helper request'''
+        bot.info('[submit|%s]' %(self.name))
+        self._submit()
+
+
+# identification
 
     def speak(self):
         '''
@@ -67,7 +105,6 @@ class HelperBase(object):
         '''
         if self.quiet is False:
             bot.info('[helper|%s]' %(self.name))
-
             self._speak()
 
 
@@ -87,12 +124,9 @@ class HelperBase(object):
 
 # Settings
 HelperBase._load_config = load_config
-#ApiConnection.require_secrets = require_secrets
-#ApiConnection._get_setting = get_setting
-#ApiConnection._get_settings = get_settings
-#ApiConnection._get_and_update_setting = get_and_update_setting
-#ApiConnection._get_storage_name = get_storage_name
-#ApiConnection._update_setting = update_setting
+HelperBase._get_setting = get_setting
+HelperBase._get_settings = get_settings
+HelperBase._get_and_update_setting = get_and_update_setting
 
 # Metadata
 #ApiConnection.get_metadata = get_metadata

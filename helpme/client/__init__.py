@@ -65,6 +65,12 @@ def get_parser():
                         help="interactive configuration", 
                         default=False, action='store_true')
 
+    # Add helpers as commands
+
+    for helper in HELPME_HELPERS:
+       subparsers.add_parser(helper)
+
+
     parser.add_argument('client', nargs='?',
                         choices=HELPME_HELPERS)
 
@@ -133,6 +139,7 @@ def main():
 
     if args.command == "config": from .config import main
     if args.command == "list": from .list import main
+    if args.command in HELPME_HELPERS: from.help import main
 
     # Pass on to the correct parser
     return_code = 0
