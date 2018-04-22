@@ -1,5 +1,6 @@
 '''
 
+
 Copyright (C) 2017-2018 Vanessa Sochat.
 Copyright (C) 2017-2018 The Board of Trustees of the Leland Stanford Junior
 University.
@@ -19,4 +20,32 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
-from helpme.version import __version__
+from .base import HelperBase
+
+
+def get_helper(quiet=False, **kwargs):
+    '''
+       get the correct helper depending on the environment variable
+       HELPME_CLIENT
+
+       quiet: if True, suppress most output about the client (e.g. speak)
+
+    '''
+    from helpme.defaults import HELPME_CLIENT
+
+    # If no obvious credential provided, we can use HELPME_CLIENT
+    if   HELPME_CLIENT == 'github': from .github import Helper
+    elif HELPME_CLIENT == 'uservoice': from .uservoice import Helper
+    else: from .github import Helper
+
+    Helper.name = HELPME_CLIENT
+    Helper.quiet = quiet
+
+    from helpme.action import ( record, config )
+    Helper.record = record
+    Helper.config = config
+
+    # Initialize the database
+    return Helper()
+
+Helper = get_helper()

@@ -1,8 +1,6 @@
 '''
 
 Copyright (C) 2017-2018 Vanessa Sochat.
-Copyright (C) 2017-2018 The Board of Trustees of the Leland Stanford Junior
-University.
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU Affero General Public License as published by
@@ -19,4 +17,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
-from helpme.version import __version__
+from helpme.main import HelperBase
+
+class Helper(HelperBase):
+
+    def __init__(self, secrets=None, base=None, **kwargs):
+ 
+        self.name = "uservoice"
+
+        super(HelperBase, self).__init__(**kwargs)

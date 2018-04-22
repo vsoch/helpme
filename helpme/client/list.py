@@ -1,8 +1,6 @@
 '''
 
-Copyright (C) 2017-2018 Vanessa Sochat.
-Copyright (C) 2017-2018 The Board of Trustees of the Leland Stanford Junior
-University.
+Copyright (C) 2018 Vanessa Sochat.
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU Affero General Public License as published by
@@ -19,4 +17,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
-from helpme.version import __version__
+from helpme.logger import bot
+from helpme.defaults import HELPME_HELPERS
+import sys
+import pwd
+import os
+
+
+def main(args, parser, subparser):
+    '''print the listing of helpers installed, defined by the HELPME_HELPERS
+       variable in the default settings flie, and then exit.
+    '''    
+    bot.info('Helpers Installed:')
+    print('\n'.join(HELPME_HELPERS))
+    

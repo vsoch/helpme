@@ -1,0 +1,82 @@
+# ----
+# Site
+
+title: HelpMe
+url: "https://vsoch.github.io/helpme"
+baseurl:  /helpme
+
+# Values for the jekyll-seo-tag gem (https://github.com/jekyll/jekyll-seo-tag)
+logo: /assets/img/helpme.png
+description: HelpMe - a command line tool for helping you out.
+author:
+  name: vsoch
+  email:
+  twitter: vsoch
+social:
+  name:
+  links:
+    - https://github.com/vsoch/helpme
+
+# -----
+# Build
+
+timezone: Etc/UTC
+
+permalink: /:categories/:title/
+
+plugins:
+  - jekyll-extract-element
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-feed
+  - jekyll-archives
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - LICENSE
+
+collections:
+  sets:
+
+
+jekyll-archives:
+  enabled: ['categories']
+
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      layout: "default"
+  -
+    scope:
+      type: "posts"
+    values:
+      layout: "post"
+      comments: true
+  -
+    scope:
+      type: "sets"
+    values:
+      _hide_content: true
+  -
+    scope:
+      path: "pages/index.html"
+    values:
+      body_class: "show_hero_search"
+
+# -----------
+# CloudCannon
+
+social_icons:
+  - Twitter
+  - Email
+  - RSS
+
+types:
+  - Document
+  - Helper
+
+_comments:
