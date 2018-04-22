@@ -58,6 +58,13 @@ defaults:
       comments: true
   -
     scope:
+      path: "pages"
+      type: "pages"
+    values:
+      layout: "default"
+
+  -
+    scope:
       type: "sets"
     values:
       _hide_content: true
