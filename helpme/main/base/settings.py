@@ -60,22 +60,35 @@ def get_configfile_user():
     return HELPME_CLIENT_SECRETS
 
 
-def load_config_user():
+def load_config_user(self):
     '''Get and load the file. This function is the primary point of interaction
        between the get_configfile_user and various get/set settings functions.
     '''
     configfile = get_configfile_user()
-    if os.path.exists(configfile):
-        return read_config(configfile)
+    return _load_config(configfile)
        
 
-def load_config():
+def load_config(self):
     '''load config should load the global helpme configuration, and update
        with user configurations from $HOME/helpme.cfg
-
     '''
     configfile = get_configfile()
-    bot.info(configfile)
+    return _load_config(configfile)
+
+
+def _load_config(configfile, section=None):
+    '''general function to load and return a configuration given a helper
+       name. This function is used for both the user config and global help me
+       config files.
+    '''
+    if os.path.exists(configfile):
+        config = read_config(configfile)
+        if section is not None:
+            if section in config:
+                return config._sections[section]
+            else:
+                bot.warning('%s not found in %s' %(section, configfile))
+        return config
 
 
 # Get and Update ###############################################################
@@ -99,11 +112,11 @@ def get_setting(self, name, default=None):
 
     if setting is None:
 
-        config = load_config_user()
-
+        # Loads user config on level of helper (already indexed)
+        config = self._load_config_user()
         if self.name in config:
-            if name in config[self.name]:
-                setting = config[self.name][name]
+            if name.lower() in config[self.name]:
+                setting = config[self.name][name.lower()]
 
     # Third priority, return a default
 
@@ -117,12 +130,12 @@ def get_setting(self, name, default=None):
 def get_settings(self):
     '''get all settings for a client, if defined in config.
     '''
-    config = load_config_user()
+    config = self._load_config_user()
     if self.name in config:
         return config[self.name]           
 
 
-def update_settings(helper, updates, config=None):
+def update_settings(self, updates, config=None):
     '''update client secrets will update the data structure for a particular
        authentication. This should only be used for a (quasi permanent) token
        or similar. The secrets file, if found, is updated and saved by default.
@@ -135,12 +148,12 @@ def update_settings(helper, updates, config=None):
 
     '''
     if config is None:
-        config = load_config_user()
+        config = self._load_config_user()
 
-    if helper not in config:
-        config[helper] = {}
+    if self.name not in config:
+        config[self.name] = {}
 
-    config[helper].update(updates)
+    config[self.name].update(updates)
 
     # Update the saved file
 
@@ -173,6 +186,6 @@ def get_and_update_setting(self, name, default=None):
     # If the setting is found, update the client secrets
     if setting is not None:
         updates = {name : setting}
-        update_settings(self.name, updates)
+        self._update_settings(updates)
 
     return setting

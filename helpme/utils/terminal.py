@@ -27,6 +27,29 @@ from subprocess import (
 import os
 
 
+# User Prompts
+
+def confirm_prompt(prompt, choice=None):
+    '''Ask the user for a prompt, and only return when one of the requested
+       options is provided.
+
+       Parameters
+       ==========
+       prompt: the prompt to ask the user
+    
+    '''
+    print(prompt)
+    get_input = getattr(__builtins__, 'raw_input', input)
+    message = 'Please enter your choice [Y/N]: '
+    while choice not in ['Y',"N","n","y"]:
+        choice = get_input(message).strip()
+        message = "Please enter a valid option in [Y/N]"    
+    return choice
+
+
+
+# Terminal Commands
+
 def which(software, strip_newline=True):
     '''get_install will return the path to where an executable is installed.
     '''

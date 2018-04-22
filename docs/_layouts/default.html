@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link rel="stylesheet" href="{{ site.baseurl }}/assets/css/screen.css">
+		<link rel="apple-touch-icon" href="{{ site.baseurl }}/assets/img/apple-touch-icon.png">
+		<link rel="icon" type="image/png" href="{{ site.baseurl }}/assets/img/touch-icon.png" sizes="192x192">
+		<link rel="icon" type="image/png" href="{{ site.baseurl }}/assets/img/favicon.png">
+		<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Merriweather:400italic,400,300italic,300,700,700italic|Open+Sans:400italic,600italic,700italic,700,600,400|Inconsolata:400,700">
+
+		{% seo %}
+		{% feed_meta %}
+
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	</head>
+
+	<body class="{{ page.body_class }}">
+		<header>
+			<div class="wrapper">
+				<section class="top-bar">
+					<div class="logo"><a href="/"><img style='margin-top:10px' 
+                                                                           src="{{ site.baseurl }}/assets/img/helpme.png"></a></div>
+					{% include navigation.html %}
+				</section>
+				<section class="hero_search">
+					<h1>HelpMe</h1>
+					<p>A command line tool for helping you out</p>
+					{% include search.html %}
+				</section>
+			</div>
+
+		</header>
+		<section class="content">
+			<div class="wrapper">
+				{{ content }}
+			</div>
+		</section>
+
+		{% include footer.html %}
+		<script>
+			$(function() {
+				$('a[href*=\\#]').not(".no-smooth").on('click', function(event){
+					var el = $(this.hash);
+					if (el.length > 0) {
+						// event.preventDefault();
+						$('html,body').animate({scrollTop:$(this.hash).offset().top - 50}, 500);
+					}
+				});
+
+				$('svg').click(function() {
+					$(this).parent('form').submit();
+				});
+			});
+
+			document.getElementById("open-nav").addEventListener("click", function (event) {
+				event.preventDefault();
+				document.body.classList.toggle("nav-open");
+			});
+		</script>
+	</body>
+</html>

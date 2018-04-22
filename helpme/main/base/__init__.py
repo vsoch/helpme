@@ -18,26 +18,14 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
 from helpme.logger import bot
-from .auth import ( auth_flow )
-
-from .headers import (
-    basic_auth_header,
-    get_headers,
-    reset_headers,
-    update_headers
-)
-
-from .http import ( 
-    call, delete, download, get, head, healthy, 
-    paginate_get, post, put, stream, 
-    stream_response
-)
 
 from .settings import (
     get_setting,
     get_settings,
     get_and_update_setting,
-    load_config
+    load_config,
+    load_config_user,
+    update_settings
 )
 
 import os
@@ -49,7 +37,8 @@ class HelperBase(object):
     def __init__(self, name=None):
  
         self.name = 'github' or name
-        self._load_config()
+        self.config = self._load_config()
+        self.config_user = self._load_config_user()
         self.load_secrets()
 
     def load_secrets(self):
@@ -74,11 +63,18 @@ class HelperBase(object):
              root. After performing global actions, each function then calls
              a class specific function of the same name (e.g., start calls
              _start) that is implemented by the helper class to do custom
-             operations for the helper.
-
-             
-
+             operations for the helper.             
         '''
+        # Step 1: look through config to determine steps
+
+        # Step 2: Start the helper (announce and run start, which is init code)
+
+        # Step 3: Iterate through flow, check each step for known record/prompt,
+        #         and collect outputs appropriately
+
+        # Step 4: When data collected, pass data structures to submit
+
+def confirm_prompt(prompt, choice=None):
 
     def start(self):
         '''start the helper flow. We check helper system configurations to
@@ -124,27 +120,8 @@ class HelperBase(object):
 
 # Settings
 HelperBase._load_config = load_config
+HelperBase._load_config_user = load_config_user
 HelperBase._get_setting = get_setting
 HelperBase._get_settings = get_settings
 HelperBase._get_and_update_setting = get_and_update_setting
-
-# Metadata
-#ApiConnection.get_metadata = get_metadata
-
-# Auth
-#ApiConnection.require_secrets = require_secrets
-#ApiConnection._auth_flow = auth_flow
-
-# Http and Requests
-#ApiConnection._call = call
-#ApiConnection._delete = delete
-#ApiConnection.download = download
-#ApiConnection._get = get
-#ApiConnection._head = head
-#ApiConnection._healthy = healthy
-#ApiConnection._paginate_get = paginate_get
-#ApiConnection._post = post
-#ApiConnection._put = put
-#ApiConnection.stream = stream
-#ApiConnection._stream = stream_response
-#ApiConnection._verify = verify
+HelperBase._update_settings = update_settings

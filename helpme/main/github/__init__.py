@@ -19,17 +19,18 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from helpme.main import HelperBase
 from helpme.action import record_asciinema
+from helpme.logger import bot
+import os
+import sys
 
 class Helper(HelperBase):
 
     def __init__(self, **kwargs):
  
         self.name = "github"
-
-        super(HelperBase, self).__init__(**kwargs)
+        super(Helper, self).__init__(**kwargs)
 
     def load_secrets(self):
-
         self.token = self._get_and_update_setting('HELPME_GITHUB_TOKEN')
 
         if self.token is None:

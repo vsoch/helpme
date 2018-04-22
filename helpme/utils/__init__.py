@@ -1,4 +1,5 @@
 from .terminal import (
+    confirm_prompt,
     run_command,
     get_installdir,
     which

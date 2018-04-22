@@ -1,3 +1,13 @@
+---
+date: 2017-01-16
+title: Developers
+permalink: /developers
+categories:
+  - development
+description: Hot to contribute to HelpMe
+type: Document
+---
+
 # Developer Usage
 
 HelpMe is also accessible from within Python! In this documentation we will

@@ -1,3 +1,13 @@
+---
+date: 2017-01-16
+title: Helper Options
+permalink: /options
+categories:
+  - getting-started
+description: Options and configuration for a helper
+type: Document
+---
+
 # Helper Options
 
 If you are developing a custom helper (or if you have installed it and want to

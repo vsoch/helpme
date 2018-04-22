@@ -1,0 +1,8 @@
+- name:
+  link: https://twitter.com/containertools
+  social_icon: Twitter
+  new_window: true
+- name: 
+  link: /feed.xml
+  social_icon: RSS
+  new_window: false
