@@ -70,9 +70,17 @@ def get_parser():
     for helper in HELPME_HELPERS:
        subparsers.add_parser(helper)
 
+    # An optional last catch all variable?
 
-    parser.add_argument('client', nargs='?',
-                        choices=HELPME_HELPERS)
+    parser.add_argument('dest', nargs='?')
+
+    # Global (optional) values
+
+    parser.add_argument('--asciinema', dest="asciinema", 
+                        help='''full path to asciinema video json file, if you
+                                want to use one again on a subsequent request.''', 
+                        default=None)
+
 
     return parser
 
@@ -123,9 +131,17 @@ def main():
     if len(sys.argv) == 1:
         help()
     try:
-        args = parser.parse_args()
+        args, unknown = parser.parse_known_args()
     except:
         sys.exit(0)
+
+    # If unknown arguments were provided, pass on to cmd to run
+    #TODO: this needs to capture custom arguments for config, can we 
+    # add them dynamically?
+    # custom_args = helper.get_custom_args() 
+    # stopper here - weire that function!
+    if args.command in HELPME_HELPERS and len(unknown) > 0:
+        print(unknown)
 
     # if environment logging variable not set, make silent
 

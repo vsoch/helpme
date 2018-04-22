@@ -29,11 +29,15 @@ def main(args, parser, subparser):
     '''
     from helpme import get_helper
 
+    print(args.dest)
+
     name = args.command
     if name in HELPME_HELPERS:
         print('The helper is %s' %name)
 
+        # TODO: should args be turned into a dictionary?
+        # For github, needs to pass through repo name into kwargs...
+
         # Get the helper, do the recording, submit
-        helper = get_helper(name)
-        helper.start()
-        helper.submit()
+        helper = get_helper(name, parser.args)
+        helper.run()

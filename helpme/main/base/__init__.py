@@ -18,6 +18,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
 from helpme.logger import bot
+from helpme.utils import ( confirm_prompt, regexp_prompt )
+from helpme.action import record_asciinema
+
+from configparser import NoOptionError
 
 from .settings import (
     get_setting,
@@ -34,12 +38,24 @@ import sys
 
 class HelperBase(object):
 
-    def __init__(self, name=None):
- 
+    def __init__(self, name=None, **kwargs):
+        '''the helper base loads configuration files for the user (in $HOME)
+           and module, and then stores any arguments given from the caller
+
+           Parameters
+           ==========
+           name: the helper name, defaults to github
+           kwargs: should include command line arguments from the client.
+
+        '''
+
         self.name = 'github' or name
         self.config = self._load_config()
         self.config_user = self._load_config_user()
         self.load_secrets()
+
+        # Data and variables collected from the user
+        self.data = kwargs or dict()
 
     def load_secrets(self):
         '''the subclass helper should implement this function to load 
@@ -65,16 +81,22 @@ class HelperBase(object):
              _start) that is implemented by the helper class to do custom
              operations for the helper.             
         '''
-        # Step 1: look through config to determine steps
+
+        # Step 1: get config steps
+        steps = self.config._sections[self.name]
 
         # Step 2: Start the helper (announce and run start, which is init code)
+        self.start()
 
         # Step 3: Iterate through flow, check each step for known record/prompt,
         #         and collect outputs appropriately
 
+        for step, content in steps.items():
+            self.collect(step, content)
+        
         # Step 4: When data collected, pass data structures to submit
+        self.submit()
 
-def confirm_prompt(prompt, choice=None):
 
     def start(self):
         '''start the helper flow. We check helper system configurations to
@@ -87,6 +109,133 @@ def confirm_prompt(prompt, choice=None):
         '''submit is the final call to submit the helper request'''
         bot.info('[submit|%s]' %(self.name))
         self._submit()
+
+    def _submit(self):
+        '''if this function is called, it indicates the helper submodule
+           doesn't have a submit function, so no submission is done.
+        '''
+        bot.error('_submit() not implemented in helper %s.' %self.name)
+        sys.exit(1)
+
+# Collectors
+
+
+    def collect(self, step, content):
+        '''given a name of a configuration key and the provided content, collect
+           the required metadata from the user.
+ 
+           Parameters
+           ==========
+           step: the key in the configuration. Can be one of:
+                   user_message_<name>
+                   runtime_arg_<name>
+                   record_asciinema
+                   record_environment
+                   user_prompt_<name>
+           content: the default value or boolean to indicate doing the step.
+        '''
+
+        # Option 1: The step is just a message to print to the user
+        if step.startswith('user_message'):
+            print(content)   
+     
+        # Option 2: The step is to collect a user prompt (if not at runtime)
+        elif step.startswith('user_prompt'):
+            self.collect_argument(step, content)
+
+        # Option 3: The step is to record an asciinema!
+        elif step == 'record_asciinema':
+            self.record_asciinema()
+
+        # Option 4: Record the user environment
+        elif step == "record_environment":
+            self.record_environment()
+
+        bot.debug(self.data)
+
+    def collect_argument(self, step, message):
+        '''given a key in the configuration, collect the runtime argument if
+           provided. Otherwise, prompt the user for the value.
+
+           Parameters
+           ==========
+           step: the name of the step, should be 'runtime_arg_<name>'
+           message: the content of the step, the message to show the user if the
+                    argument <name> is not found under args.
+
+        '''
+        print(step)
+        print(message)
+        argname = step.replace('user_prompt_', '')
+        if argname not in self.data:
+            self.data[argname] = regexp_prompt(message)
+
+
+# Recorders
+
+    def record_environment(self):
+        '''collect a limited set of environment variables based on the list
+           under record_envirionment in the configuration file.
+        '''
+
+        # whitelist is a newline separated list under record_environment
+
+        envars = self._get_setting('whitelist', 'record_environment')
+
+        if envars is not None:
+        
+            envars = envars.split('\n')
+
+            # Make transparent for the user
+
+            print('Capturing subset of whitelisted environment:')
+            bot.info('|'.join(envars))
+
+            # Iterate through and collect based on name
+
+            keep = [(k,v) for k,v in os.environ.items() if k.lower() in envars]
+
+            # Ask the user for permission
+
+            if confirm_prompt('Is this list ok?'):
+                self.data['record_environment'] = keep
+
+
+    def record_asciinema(self):
+        '''record an asciinema from the user session, saving the file to
+           a temporary file and showing the user so if he/she needs to do it
+           again, the file can be provided. The flow of events below makes
+           the following checks:
+
+           1. The user confirms it is ok to record
+           2. The record_asciinema setting is present and True in the config
+           3. An asciinema file path has not been provided by the user
+
+        '''
+
+        if confirm_prompt("Would you like to send a terminal recording?"):
+
+            # The config has a confirmatory value
+
+            try:
+                record = self.config.getboolean(self.name, 'record_asciinema')
+            except  from NoOptionError:
+                record = False
+
+            # The user provided a file, and it exists
+            if "asciinema" in self.data:
+                if os.path.exists(self.data['asciinema']):
+                    record = False
+                    
+            if record is True:
+                self.data['asciiname'] = record_asciinema()
+
+            message = '''recorded! File at %s. If you need to run helpme again
+                         you can supply the path to this file with the 
+                         --asciinema flag''' %filename
+
+            bot.custom(prefix="Asciinema ", message=message, color="CYAN")
+
 
 
 # identification

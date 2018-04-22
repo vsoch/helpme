@@ -1,5 +1,7 @@
 from .terminal import (
     confirm_prompt,
+    choice_prompt,
+    regexp_prompt,
     run_command,
     get_installdir,
     which

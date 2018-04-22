@@ -53,7 +53,7 @@ layout: default
 {% assign related_posts_size = related_posts | size %}
 {% if related_posts_size > 0 %}
 	<div class="related">
-		<h3>Related tutorials</h3>
+		<h3>Related pages</h3>
 
 		{% include listings.html listings=site.related_posts %}
 	</div>
@@ -93,7 +93,7 @@ layout: default
 	<div>
 		<a title="Close" class="close">&times;</a>
 		<h2>Share</h2>
-		<p>Share this tutorial with your community.</p>
+		<p>Share this page with your community.</p>
 		<ul>
 			<li><a class="twitter" target="_blank" href="https://twitter.com/intent/tweet?url={{ page.url | prepend: site.url | cgi_escape }}">{% include social-icon.html icon="Twitter" %} Twitter</a></li>
 			<li><a class="facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | prepend: site.url | cgi_escape }}">{% include social-icon.html icon="Facebook2" %} Facebook</a></li>

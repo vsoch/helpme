@@ -2,11 +2,11 @@
 # Site
 
 title: HelpMe
-url: "https://researchapps.github.io/helpme"
-baseurl:
+url: "https://vsoch.github.io/helpme"
+baseurl:  /helpme
 
 # Values for the jekyll-seo-tag gem (https://github.com/jekyll/jekyll-seo-tag)
-logo: /siteicon.png
+logo: /assets/img/helpme.png
 description: HelpMe - a command line tool for helping you out.
 author:
   name: vsoch
@@ -15,7 +15,7 @@ author:
 social:
   name:
   links:
-    - https://github.com/researchapps/helpme
+    - https://github.com/vsoch/helpme
 
 # -----
 # Build

@@ -1,17 +1,18 @@
 ---
 date: 2017-01-16
-title: Developers
-permalink: /developers
+title: Settings
+permalink: /docs-development
 categories:
   - development
-description: Hot to contribute to HelpMe
+description: How to start developing with HelpMe
 type: Document
 ---
 
-# Developer Usage
-
 HelpMe is also accessible from within Python! In this documentation we will
 show you how to initialize a helper, and then interact with settings and functions.
+These functions can be helpful (harhar) when you are developing a helper and need
+to test obtaining settings from the environment, configuration values, or otherwise
+interacting with an instance of the Helper class.
 
 ## Helper
 
@@ -49,6 +50,7 @@ configuration file for discovery next time. The flow looks like this:
  - the environment variable is found, saved to configuration file
  - next time, the variable is found in the configuration file.
 
+
 More on the functions to interact with settings is discussed next.
 
 ## Helper Settings
@@ -64,8 +66,9 @@ and asked the user for two prompts:
 ```
 ```
 
-For a complete list of options that can be given to a helper, see the [options](helper-options.md)
+For a complete list of options that can be given to a helper, see the [options](/helpme/docs-options).
 page.
+
 
 ## User Settings
 Once the helper is loaded, we can use its various functions to inspect settings.
@@ -88,7 +91,6 @@ $ helper._get_and_update_setting('HELPME_GITHUB_DOESNTEXIST')
 
 It can be helpful in this case to give the function a default to return in the
 case that nothing is set.
-
 
 ```python
 $ helper._get_and_update_setting('HELPME_GITHUB_DOESNTEXIST', 'default')

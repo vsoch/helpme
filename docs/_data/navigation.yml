@@ -1,6 +1,6 @@
 - name: Getting Started
   link: /
-- name: Usage
-  link: /docs/
+- name: Faq
+  link: /faq/
 - name: Helpers
-  link: /helpers/
+  link: /category/helpers/
