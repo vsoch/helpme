@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 '''
 
 
-from helpme.defaults import convert2boolean
 from helpme.logger import bot
 from subprocess import (
     Popen,
@@ -139,3 +138,12 @@ def run_command(cmd, sudo=False):
         output['message'] = output['message'].decode('utf-8')
 
     return output
+
+def convert2boolean(arg):
+    '''
+    convert2boolean is used for environmental variables
+    that must be returned as boolean
+    '''
+    if not isinstance(arg, bool):
+        return arg.lower() in ("yes", "true", "t", "1", "y")
+    return arg

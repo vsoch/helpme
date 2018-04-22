@@ -37,31 +37,8 @@ $ helpme github singularityware/singularity
 $ helpme uservoice
 ```
 
+For more details, see our [documentation](https://vsoch.github.io/helpme) that is also under development.
 
-# Development
+## License
 
-*What is a helper?*
-A helper is a submodule in the [helpme/helpers](helpme/helpers) folder that has
-a `helpme.cfg` file. Specifically, the configuration file should specify the following:
-
-*How is the application configured?*
-The core helpme software has a primary [helpme.cfg](helpme.cfg) that defines various
-helper defaults. This file is stored with the installed modules, and not intended to keep
-user credentials. However, it can be used to keep global API keys, etc. for a group
-of users. For example, here we see a configuration file that holds an API key for 
-uservoice, and a base for Github.
-
-```
-[DEFAULT]
-
-[uservoice]
-client_token 123456
-
-[github]
-api_url https://api.github.com/v3
-```
-
-*What about user configuration?*
-
-The individual user will have a `helpme.cfg` file placed in his or her `$HOME`,
-and this file will serve to hold runtime variables and user-specific customizations.
+This code is licensed under the Affero GPL, version 3.0 or later [LICENSE](LICENSE).

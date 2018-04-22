@@ -219,7 +219,7 @@ class HelperBase(object):
 
             try:
                 record = self.config.getboolean(self.name, 'record_asciinema')
-            except  from NoOptionError:
+            except NoOptionError:
                 record = False
 
             # The user provided a file, and it exists

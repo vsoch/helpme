@@ -135,13 +135,10 @@ def main():
     except:
         sys.exit(0)
 
-    # If unknown arguments were provided, pass on to cmd to run
-    #TODO: this needs to capture custom arguments for config, can we 
-    # add them dynamically?
-    # custom_args = helper.get_custom_args() 
-    # stopper here - weire that function!
+    # If unknown arguments were provided, pass on to helper
+
     if args.command in HELPME_HELPERS and len(unknown) > 0:
-        print(unknown)
+        args.dest = unknown
 
     # if environment logging variable not set, make silent
 
