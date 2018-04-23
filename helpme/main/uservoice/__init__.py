@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from helpme.main import HelperBase
 from helpme.action import ( record_asciinema, upload_asciinema )
 from helpme.logger import ( bot )
+import uservoice
 import os
 import sys
 
@@ -97,9 +98,10 @@ class Helper(HelperBase):
 
         self.post_ticket(title, body)
 
+
 # UserVoice API Helpers
 
-    def authenticate():
+    def authenticate(self):
         '''authenticate with uservoice by creating a client.'''
 
         if not hasattr(self, 'client'):
@@ -111,6 +113,12 @@ class Helper(HelperBase):
 
     def post_ticket(self, title, body):
         '''post_ticket will post a ticket to the uservoice helpdesk
+
+           Parameters
+           ==========
+           title: the title (subject) of the issue
+           body: the message to send
+
         '''
 
         # Populate the ticket

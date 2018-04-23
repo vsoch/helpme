@@ -110,7 +110,7 @@ class HelperBase(object):
         self.speak()
         self._start(positionals)
 
-    def _start(self):
+    def _start(self, postitions=None):
         '''_start should be implemented by the subclass, and print any extra
            information for the helper to the user
         '''
