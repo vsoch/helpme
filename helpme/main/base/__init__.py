@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
-from helpme.logger import bot
+from helpme.logger import ( bot, RobotNamer )
 from helpme.utils import ( confirm_prompt, regexp_prompt )
 from helpme.action import record_asciinema
 
@@ -82,6 +82,8 @@ class HelperBase(object):
              _start) that is implemented by the helper class to do custom
              operations for the helper.             
         '''
+        # Step 0: Each run session is given a fun name
+        self.run_id = RobotNamer().generate()
 
         # Step 1: get config steps
         steps = self.config._sections[self.name]
@@ -111,8 +113,8 @@ class HelperBase(object):
 
     def submit(self):
         '''submit is the final call to submit the helper request'''
-        bot.info('[submit=>%s]' %(self.name))
         self._submit()
+        bot.info('[submit=>%s]' %(self.name))
 
     def _submit(self):
         '''if this function is called, it indicates the helper submodule
@@ -157,6 +159,7 @@ class HelperBase(object):
 
         bot.debug(self.data)
 
+
     def collect_argument(self, step, message):
         '''given a key in the configuration, collect the runtime argument if
            provided. Otherwise, prompt the user for the value.
@@ -168,9 +171,8 @@ class HelperBase(object):
                     argument <name> is not found under args.
 
         '''
-        argname = step.replace('user_prompt_', '')
-        if argname not in self.data:
-            self.data[argname] = regexp_prompt(message)
+        if step not in self.data:
+            self.data[step] = regexp_prompt(message)
 
 
 # Recorders
@@ -182,24 +184,29 @@ class HelperBase(object):
 
         # whitelist is a newline separated list under record_environment
 
-        envars = self._get_setting('whitelist', 'record_environment')
+        envars = self._get_setting(name='whitelist', 
+                                   section='record_environment',
+                                   user=False)
 
         if envars is not None:
         
-            envars = envars.split('\n')
+            # User uppercase
+         
+            envars = [x.upper() for x in envars.split('\n')]
 
             # Make transparent for the user
 
-            print('Capturing subset of whitelisted environment:')
-            bot.info('|'.join(envars))
+            bot.custom(prefix="Environment ",
+                       message='|'.join(envars),
+                       color="CYAN")
 
             # Iterate through and collect based on name
 
-            keep = [(k,v) for k,v in os.environ.items() if k.lower() in envars]
+            keep = [(k,v) for k,v in os.environ.items() if k.upper() in envars]
 
             # Ask the user for permission
 
-            if confirm_prompt('Is this list ok?'):
+            if confirm_prompt('Is this list ok to share?'):
                 self.data['record_environment'] = keep
 
 
@@ -215,29 +222,25 @@ class HelperBase(object):
 
         '''
 
-        if confirm_prompt("Would you like to send a terminal recording?"):
+        # If the user already provided a file, we don't need to ask again
 
-            # The config has a confirmatory value
+        if 'record_asciinema' not in self.data:
 
-            try:
-                record = self.config.getboolean(self.name, 'record_asciinema')
-            except NoOptionError:
-                record = False
+            if confirm_prompt("Would you like to send a terminal recording?"):
 
-            # The user provided a file, and it exists
-            if "asciinema" in self.data:
-                if os.path.exists(self.data['asciinema']):
-                    record = False
-                    
-            if record is True:
-                self.data['asciinema'] = record_asciinema()
+                try:
+                    record = self.config.getboolean(self.name, 'record_asciinema')
+                    filename = record_asciinema()
+                    self.data['record_asciinema'] = filename
 
-            message = '''recorded! File at %s. If you need to run helpme again
-            you can supply the path to this file with the 
-            --asciinema flag''' %self.data['asciinema']
+                    message = '''If you need to run helpme again you can give
+                    the path to this file with  --asciinema %s''' % filename
 
-            bot.custom(prefix="Asciinema ", message=message, color="CYAN")
+                    bot.custom(prefix="Asciinema ", message=message, color="CYAN")
 
+                except NoOptionError:
+
+                    bot.warning('Cannot record asciinema, skipping.')
 
 
 # identification

@@ -23,7 +23,7 @@ import pwd
 import os
 
 
-def main(args,parser,subparser):
+def main(args, extra):
     from helpme.main import Helper
     
     print('This will configure a client for the user')

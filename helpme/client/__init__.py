@@ -68,19 +68,11 @@ def get_parser():
     # Add helpers as commands
 
     for helper in HELPME_HELPERS:
-       subparsers.add_parser(helper)
-
-    # An optional last catch all variable?
-
-    parser.add_argument('runtime', nargs='?')
-
-    # Global (optional) values
-
-    parser.add_argument('--asciinema', dest="asciinema", 
-                        help='''full path to asciinema video json file, if you
-                                want to use one again on a subsequent request.''', 
-                        default=None)
-
+       sub = subparsers.add_parser(helper)
+       sub.add_argument('--asciinema', dest="asciinema", 
+                         help='''full path to asciinema video json file, if you
+                         want to use one again on a subsequent request.''', 
+                         default=None)
 
     return parser
 
@@ -135,10 +127,9 @@ def main():
     except:
         sys.exit(0)
 
-    # If unknown arguments were provided, pass on to helper
-
+    extras = None
     if args.command in HELPME_HELPERS and len(unknown) > 0:
-        args.dest = unknown
+        extras = unknown
 
     # if environment logging variable not set, make silent
 
@@ -157,9 +148,7 @@ def main():
     # Pass on to the correct parser
     return_code = 0
     try:
-        main(args=args,
-             parser=parser,
-             subparser=subparsers[args.command])
+        main(args, extras)
         sys.exit(return_code)
     except UnboundLocalError:
         return_code = 1

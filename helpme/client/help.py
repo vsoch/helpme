@@ -24,16 +24,21 @@ import pwd
 import os
 
 
-def main(args, parser, subparser):
+def main(args, extras):
     '''This is the actual driver for the helper.
     '''
 
     from helpme.main import get_helper
     name = args.command
+
     if name in HELPME_HELPERS:
 
         # Get the helper, do the recording, submit
-        helper = get_helper(name)
-        helper.run(positionals=args.runtime)
 
-        # STOPPED HERE - still writing the underlying HelperBase
+        helper = get_helper(name)
+
+        if args.asciinema is not None:
+            if os.path.exists(args.asciinema):
+                helper.data['record_asciinema'] = args.asciinema
+ 
+        helper.run(positionals=extras)

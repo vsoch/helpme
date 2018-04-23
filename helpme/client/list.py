@@ -24,7 +24,7 @@ import pwd
 import os
 
 
-def main(args, parser, subparser):
+def main(args, extra):
     '''print the listing of helpers installed, defined by the HELPME_HELPERS
        variable in the default settings flie, and then exit.
     '''    

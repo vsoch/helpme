@@ -105,7 +105,7 @@ def _load_config(configfile, section=None):
 
 # Get and Update ###############################################################
 
-def get_setting(self, name, section=None, default=None):
+def get_setting(self, name, section=None, default=None, user=True):
     '''return a setting from the environment (first priority) and then
        secrets (second priority) if one can be found. If not, return None.
 
@@ -114,8 +114,13 @@ def get_setting(self, name, section=None, default=None):
        section: the section in the config, defaults to self.name
        name: they key (index) of the setting to look up
        default: (optional) if not found, return default instead.
+       user: if True, load from user config. Otherwise, main config
 
     ''' 
+    loader = self._load_config_user
+    if not user:
+        loader = self._load_config
+
     if section is None:
         section = self.name
 
@@ -128,7 +133,7 @@ def get_setting(self, name, section=None, default=None):
     if setting is None:
 
         # Loads user config on level of helper (already indexed)
-        config = self._load_config_user()
+        config = loader()
         if section in config:
             if name.lower() in config[section]:
                 setting = config[section][name.lower()]
