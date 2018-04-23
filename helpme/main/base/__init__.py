@@ -110,10 +110,18 @@ class HelperBase(object):
         self.speak()
         self._start(positionals)
 
+    def _start(self):
+        '''_start should be implemented by the subclass, and print any extra
+           information for the helper to the user
+        '''
+        pass
+
+
     def submit(self):
         '''submit is the final call to submit the helper request'''
         self._submit()
         bot.info('[submit=>%s]' %(self.name))
+
 
     def _submit(self):
         '''if this function is called, it indicates the helper submodule

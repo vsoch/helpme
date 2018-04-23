@@ -182,7 +182,7 @@ def update_settings(self, updates, config=None):
     return config
 
 
-def get_and_update_setting(self, name, default=None):
+def get_and_update_setting(self, name, default=None, user=True):
     '''Look for a setting in the environment (first priority) and then
        the settings file (second). If something is found, the settings
        file is updated. The order of operations works as follows:
@@ -198,7 +198,7 @@ def get_and_update_setting(self, name, default=None):
        not set anywhere, and take the appropriate action.
     ''' 
 
-    setting = self._get_setting(name)
+    setting = self._get_setting(name, user=user)
 
     if setting is None and default is not None:
         setting = default
