@@ -2,11 +2,14 @@ FROM continuumio/miniconda3
 
 # docker build -t vanessa/helpme .
 
+RUN apt-get update && apt-get install -y gcc
+
 RUN mkdir /code
 ADD . /code
+WORKDIR /code
 RUN /opt/conda/bin/pip install setuptools && \
     /opt/conda/bin/pip install pip --upgrade && \
-    /opt/conda/bin/pip install -r requirements.txt && \
+    /opt/conda/bin/pip install -r /code/requirements.txt && \
     cd /code && /opt/conda/bin/python setup.py install
 
 ENTRYPOINT ["helpme"]
