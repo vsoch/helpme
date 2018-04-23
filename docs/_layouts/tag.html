@@ -5,7 +5,7 @@ layout: default
 <div>
     {% if site.tags[page.tag] %}
         {% for post in site.tags[page.tag] %}
-            <a href="{{ site.baseurl }}{{ post.url }}/">
+            <a href="{{ site.baseurl }}{{ post.url }}">
             <article>
                 <div style="padding-bottom:15px">
 		    <h6>{% if include.numbered %}{{ forloop.index }}. {% endif %}{{ post.title }}</h6></a>
