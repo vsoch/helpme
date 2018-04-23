@@ -12,8 +12,8 @@ tags: [contribute]
 It's so great that you want to contribute! There are several ways to do this.
 
  - [Contribute Code](https://www.github.com/vsoch/helpme) meaning these documentation pages, or helpme itself!
- - [Add A Helper](#add-a-helper) add another folder in helpers, a module for a user to ask help from.
- - [Add A Recorder](#add-a-recorder) contribute another way for a user to send information from the terminal to the helper endpoint.
+ - [Add A Helper](#add-a-helper) a module for a user to ask help from.
+ - [Add A Recorder](#add-a-recorder) for a user to request help to an endpoint.
  - [Ask a question](https://www.github.com/vsoch/helpme/issues), anything on your mind.
 
 # Add a Helper
