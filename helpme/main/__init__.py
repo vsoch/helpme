@@ -46,10 +46,6 @@ def get_helper(name=None, quiet=True, **kwargs):
     Helper.name = HELPME_CLIENT
     Helper.quiet = quiet
 
-    from helpme.action import ( record, config )
-    Helper.record = record
-    Helper.config = config
-
     # Initialize the database
     return Helper()
 
