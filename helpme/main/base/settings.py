@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
-from helpme.logger import RobotNamer
+from helpme.logger import ( RobotNamer, bot )
 from helpme.utils import (
     get_installdir,
     mkdir_p,
