@@ -1,4 +1,8 @@
 - name:
+  link: https://www.github.com/vsoch/helpme
+  social_icon: Github
+  new_window: true
+- name:
   link: https://twitter.com/containertools
   social_icon: Twitter
   new_window: true
