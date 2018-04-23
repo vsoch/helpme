@@ -22,7 +22,7 @@ social:
 
 timezone: Etc/UTC
 
-permalink: /:categories/:title/
+permalink: pretty
 
 plugins:
   - jekyll-extract-element
