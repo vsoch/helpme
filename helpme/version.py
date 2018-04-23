@@ -40,8 +40,22 @@ DESCRIPTION = "command line client for helpme application."
 LICENSE = "LICENSE"
 
 
+################################################################################
+# Global requirements
+
+
 INSTALL_REQUIRES = (
-    ('aiohttp', {'min_version': None}),
-    ('requests', {'min_version': '2.12.4'}),
-    ('retrying', {'min_version': '1.3.3'})
+    ('requests', {'min_version': '2.18.4'}),
 )
+
+################################################################################
+# Submodule Requirements
+
+
+INSTALL_USERVOICE = (
+    ('uservoice', {'min_version': '0.0.23'}),
+)
+
+
+INSTALL_ALL = (INSTALL_REQUIRES +
+               INSTALL_USERVOICE)

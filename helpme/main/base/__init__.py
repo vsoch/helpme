@@ -50,7 +50,6 @@ class HelperBase(object):
 
         '''
 
-        self.name = 'github' or name
         self.config = self._load_config()
         self.config_user = self._load_config_user()
         self.load_secrets()

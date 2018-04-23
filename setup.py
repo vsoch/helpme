@@ -16,15 +16,16 @@ def get_lookup():
     return lookup
 
 # Read in requirements
-def get_requirements(lookup=None):
-    '''get_requirements reads in requirements and versions from
+
+def get_reqs(lookup=None, key='INSTALL_REQUIRES'):
+    '''get requirements, meaning reading in requirements and versions from
     the lookup obtained with get_lookup'''
 
     if lookup == None:
         lookup = get_lookup()
 
     install_requires = []
-    for module in lookup['INSTALL_REQUIRES']:
+    for module in lookup[key]:
         module_name = module[0]
         module_meta = module[1]
         if "exact_version" in module_meta:
@@ -36,7 +37,6 @@ def get_requirements(lookup=None):
                 dependency = "%s>=%s" %(module_name,module_meta['min_version'])
         install_requires.append(dependency)
     return install_requires
-
 
 
 # Make sure everything is relative to setup.py
@@ -62,7 +62,8 @@ with open('README.md') as filey:
 
 if __name__ == "__main__":
 
-    INSTALL_REQUIRES = get_requirements(lookup)
+    INSTALL_REQUIRES = get_reqs(lookup, 'INSTALL_ALL')
+    INSTALL_USERVOICE = get_reqs(lookup, 'INSTALL_USERVOICE')
 
     setup(name=NAME,
           version=VERSION,
@@ -80,6 +81,12 @@ if __name__ == "__main__":
           long_description=LONG_DESCRIPTION,
           keywords=KEYWORDS,
           install_requires = INSTALL_REQUIRES,
+          extras_require={
+
+              'all': [INSTALL_REQUIRES],
+              'uservoice': [INSTALL_USERVOICE]
+
+          },
           classifiers=[
               'Intended Audience :: Science/Research',
               'Intended Audience :: Developers',
