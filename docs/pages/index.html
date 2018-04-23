@@ -19,7 +19,7 @@ permalink: /
 					<li><a href="{{ site.baseurl }}{{ tutorial.url }}">{% include document-icon.html icon=tutorial.type %}{{ tutorial.title }}</a></li>
 				{% endfor %}
 				{% if size > 4 %}
-					<li><a href="{{ site.baseurl }}/category/{{ name | slugify }}/">{{ size | minus: 4 }} more...</a></li>
+					<li><a href="{{ site.baseurl }}/{{ name | slugify }}/">{{ size | minus: 4 }} more...</a></li>
 				{% endif %}
 			</ul>
 		</section>
