@@ -4,11 +4,7 @@ layout: default
 
 <section class="tutorial">
 	<section class="sidebar sticky">
-		<ul>
-			{% assign sub_navigation = content | extract_element: 'h2' %}
-			{% for item in sub_navigation %}
-				<li><a href="#{{ item.id }}">{{ item.text }}</a></li>
-			{% endfor %}
+		<ul id='sidelinks'>
 		</ul>
                 <p id="post-meta">{{ tags_content }}</p>
 	</section>
@@ -108,6 +104,16 @@ layout: default
 
 <script>
 	var headings = document.querySelectorAll("h2[id]");
+
+        // Add sidelinks to page
+        $.each($('h2'), function(e,i){
+           console.log(i)
+           var link_id = $(i).attr('id');
+           var link_text = $(i).text();
+           if (link_id != undefined) {
+               $('#sidelinks').append('<li><a href="#' + link_id + '">' + link_text + '</a></li>')
+           }
+        })
 
 	console.log(headings);
 	for (var i = 0; i < headings.length; i++) {
