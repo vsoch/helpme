@@ -2,7 +2,7 @@
 
 A command line helper when you need it.
 
-**under development**
+![docs/assets/img/interface.png](docs/assets/img/interface.png)
 
 ## Docker
 
@@ -25,19 +25,21 @@ for user variables, we send help requests to the various helpers. For example:
  - `helpme github` posts an issue on a Github board
  - `helpme uservoice` creates a ticket on uservoice
 
+We are fresh out of the oven! Please [post issues](https://www.github.com/vsoch/helpme/issues)
+with questions, feedback, or just to say hello. Hello!
 
 # Usage
 
 ```bash
 
 # Post an issue to a Github Repo.
-$ helpme github singularityware/singularity
+$ helpme github vsoch/helpme
 
 # Post a ticket to UserVoice
 $ helpme uservoice
 ```
 
-For more details, see our [documentation](https://vsoch.github.io/helpme) that is also under development.
+For more details, see our [documentation](https://vsoch.github.io/helpme).
 
 ## License
 
