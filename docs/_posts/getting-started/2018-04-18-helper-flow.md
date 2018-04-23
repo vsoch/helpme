@@ -6,6 +6,7 @@ categories:
   - getting started
 description: flow of events for a helper
 type: Document
+tags: [getting-started]
 ---
 
 The helper follows a logical flow of events, which sandwich a custom routine

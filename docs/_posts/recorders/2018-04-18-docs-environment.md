@@ -6,6 +6,7 @@ categories:
   - recorders
 description: collector to record subset of environment
 type: Document
+tags: [recorders]
 ---
 
 HelpMe has a record_environment recorder that will collect a limited set of

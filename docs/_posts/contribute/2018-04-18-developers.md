@@ -6,6 +6,7 @@ categories:
   - development
 description: How to start developing with HelpMe
 type: Document
+tags: [contribute]
 ---
 
 HelpMe is also accessible from within Python! In this documentation we will

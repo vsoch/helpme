@@ -6,6 +6,7 @@ categories:
   - contribute
 description: How to create a helper
 type: Document
+tags: [contribute]
 ---
 
 This page provides more detail on contributing a helper, first described in the

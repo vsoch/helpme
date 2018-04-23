@@ -6,6 +6,7 @@ categories:
   - contribute
 description: Hot to contribute to HelpMe
 type: Document
+tags: [contribute]
 ---
 
 It's so great that you want to contribute! There are several ways to do this.

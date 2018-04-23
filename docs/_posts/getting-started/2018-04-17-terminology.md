@@ -6,6 +6,7 @@ categories:
 description: Terminology used for HelpMe
 permalink: /docs-terminology
 type: Document
+tags: [getting-started]
 ---
 
 HelpMe consists of the following components:

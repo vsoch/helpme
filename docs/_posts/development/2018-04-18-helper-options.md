@@ -6,6 +6,7 @@ categories:
   - development
 description: Options and configuration for a helper
 type: Document
+tags: [development]
 ---
 
 If you are developing a custom helper (or if you have installed it and want to

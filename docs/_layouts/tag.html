@@ -1,0 +1,20 @@
+---
+layout: default
+---
+<h1>{{ page.tag }}</h1>
+<div>
+    {% if site.tags[page.tag] %}
+        {% for post in site.tags[page.tag] %}
+            <a href="{{ site.baseurl }}{{ post.url }}/">
+            <article>
+                <div style="padding-bottom:15px">
+		    <h6>{% if include.numbered %}{{ forloop.index }}. {% endif %}{{ post.title }}</h6></a>
+		        <small style='text-decoration:none'>{{ post.description }}</small>
+
+                </div>
+            </article>
+        {% endfor %}
+    {% else %}
+        <p>There are no posts for this tag.</p>
+    {% endif %}
+</div>
