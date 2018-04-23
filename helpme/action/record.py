@@ -22,6 +22,7 @@ from asciinema.commands.command import Command
 import asciinema.asciicast.v2 as v2
 import asciinema.asciicast.raw as raw
 import tempfile
+import os
 
 # Create subclass of RecordCommand to pass in arguments
 

@@ -76,6 +76,18 @@ def load_config(self):
     return _load_config(configfile)
 
 
+def remove_setting(self, section, name, save=False):
+    '''remove a setting from the global config
+    '''
+    removed = False
+    configfile = get_configfile()
+    config = _load_config(configfile)
+    if section in config:
+        if name.lower() in config[section]:
+            removed = config.remove_option(section, name)
+    return removed
+
+
 def _load_config(configfile, section=None):
     '''general function to load and return a configuration given a helper
        name. This function is used for both the user config and global help me

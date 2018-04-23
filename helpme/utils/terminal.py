@@ -43,7 +43,7 @@ def confirm_prompt(prompt):
     return convert2boolean(choice)
 
 
-def choice_prompt(prompt, choices=None):
+def choice_prompt(prompt, choices=None, choice=None):
     '''Ask the user for a prompt, and only return when one of the requested
        options is provided.
 
@@ -54,12 +54,12 @@ def choice_prompt(prompt, choices=None):
     
     '''
     if not choices:
-        choices = ["Y", "N", "y", "n"]
+        choices = ["y", "n", "Y", "N"]
 
     print(prompt)
     get_input = getattr(__builtins__, 'raw_input', input)
     pretty_choices = '/'.join(choices)
-    message = 'Please enter your choice [%s]: ' %(pretty_choices)
+    message = 'Please enter your choice [%s] : ' %(pretty_choices)
     while choice not in choices:
         choice = get_input(message).strip()
 
@@ -79,11 +79,11 @@ def regexp_prompt(prompt, regexp='.', answer=''):
     '''
     get_input = getattr(__builtins__, 'raw_input', input)
     while not re.search(regexp, answer):
-        answer = get_input(prompt).strip()
+        answer = get_input(prompt + ': ').strip()
         # If the option isn't valid, this is shown next
         message = "Your entry must match the regular expression %s" %regexp    
 
-    return input
+    return answer
 
 
 # Terminal Commands

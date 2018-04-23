@@ -29,6 +29,7 @@ from .settings import (
     get_and_update_setting,
     load_config,
     load_config_user,
+    remove_setting,
     update_settings
 )
 
@@ -66,7 +67,7 @@ class HelperBase(object):
 
 # Actions
 
-    def run(self):
+    def run(self, positionals=None):
         '''run the entire helper procedure, including:
 
              - start: initialize the helper, collection preferences
@@ -86,7 +87,7 @@ class HelperBase(object):
         steps = self.config._sections[self.name]
 
         # Step 2: Start the helper (announce and run start, which is init code)
-        self.start()
+        self.start(positionals)
 
         # Step 3: Iterate through flow, check each step for known record/prompt,
         #         and collect outputs appropriately
@@ -98,16 +99,19 @@ class HelperBase(object):
         self.submit()
 
 
-    def start(self):
+    def start(self, positionals=None):
         '''start the helper flow. We check helper system configurations to
            determine components that should be collected for the submission.
+           This is where the client can also pass on any extra (positional)
+           arguments in a list from the user.
         '''
+        bot.info('[helpme|%s]' %(self.name))
         self.speak()
-        self._start()
+        self._start(positionals)
 
     def submit(self):
         '''submit is the final call to submit the helper request'''
-        bot.info('[submit|%s]' %(self.name))
+        bot.info('[submit=>%s]' %(self.name))
         self._submit()
 
     def _submit(self):
@@ -164,8 +168,6 @@ class HelperBase(object):
                     argument <name> is not found under args.
 
         '''
-        print(step)
-        print(message)
         argname = step.replace('user_prompt_', '')
         if argname not in self.data:
             self.data[argname] = regexp_prompt(message)
@@ -228,11 +230,11 @@ class HelperBase(object):
                     record = False
                     
             if record is True:
-                self.data['asciiname'] = record_asciinema()
+                self.data['asciinema'] = record_asciinema()
 
             message = '''recorded! File at %s. If you need to run helpme again
-                         you can supply the path to this file with the 
-                         --asciinema flag''' %filename
+            you can supply the path to this file with the 
+            --asciinema flag''' %self.data['asciinema']
 
             bot.custom(prefix="Asciinema ", message=message, color="CYAN")
 
@@ -270,6 +272,7 @@ class HelperBase(object):
 # Settings
 HelperBase._load_config = load_config
 HelperBase._load_config_user = load_config_user
+HelperBase._remove_setting = remove_setting
 HelperBase._get_setting = get_setting
 HelperBase._get_settings = get_settings
 HelperBase._get_and_update_setting = get_and_update_setting

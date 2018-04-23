@@ -27,21 +27,13 @@ import os
 def main(args, parser, subparser):
     '''This is the actual driver for the helper.
     '''
+
     from helpme.main import get_helper
     name = args.command
     if name in HELPME_HELPERS:
-        print('The helper is %s' %name)
-
-        # the only extra (unknown) positional argument is the uri, optional
-        repo = None
-        if args.dest is not None:
-            repo = args.dest[0]
-
-        # TODO: should args be turned into a dictionary?
-        # For github, needs to pass through repo name into kwargs...
 
         # Get the helper, do the recording, submit
-        helper = get_helper(name, repo=repo)
-        helper.run()
+        helper = get_helper(name)
+        helper.run(positionals=args.runtime)
 
         # STOPPED HERE - still writing the underlying HelperBase

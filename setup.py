@@ -72,6 +72,7 @@ if __name__ == "__main__":
           maintainer_email=AUTHOR_EMAIL,
           packages=find_packages(), 
           include_package_data=True,
+          package_data={'helpme': ['*.cfg']},
           zip_safe=False,
           url=PACKAGE_URL,
           license=LICENSE,

@@ -72,7 +72,7 @@ def get_parser():
 
     # An optional last catch all variable?
 
-    parser.add_argument('dest', nargs='?')
+    parser.add_argument('runtime', nargs='?')
 
     # Global (optional) values
 

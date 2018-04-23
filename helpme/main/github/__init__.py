@@ -38,8 +38,14 @@ class Helper(HelperBase):
             print('https://researchapps.github.io/helpme/helper-github')
             sys.exit(1)
 
-    def _start(self):
-        print('Start the helper flow.')
+    def _start(self, positionals):
+
+        # If the user provides a repository name, use it
+
+        if positionals:
+            self.data['user_prompt_repo'] = positionals[0]
+            self.config.remove_option('github','user_prompt_repo')
+        
 
     def _submit(self):
         print('Submit the Helper flow....')
