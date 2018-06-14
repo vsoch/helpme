@@ -101,7 +101,6 @@ def main():
 
     # Customize parser
 
-    from helpme.main import Helper
     parser = get_parser()
     subparsers = get_subparsers(parser)
 
@@ -112,8 +111,8 @@ def main():
 
         version = helpme.__version__
         
-        bot.custom(message='HelpMe Command Line Tool v%s' %version,
-                   prefix='\n[%s]' %Helper.name, 
+        bot.custom(message='Command Line Tool v%s' %version,
+                   prefix='\n[HelpMe] ', 
                    color='CYAN')
 
         parser.print_help()
