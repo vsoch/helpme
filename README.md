@@ -8,6 +8,14 @@ HelpMe is a free to use, open source command line tool that serves one purpose: 
 
 ![docs/assets/img/interface.png](docs/assets/img/interface.png)
 
+## Local
+
+```bash
+pip install helpme[all]
+pip install helpme[github]
+pip install helpme[uservoice]
+```
+
 ## Docker
 
 ```bash
