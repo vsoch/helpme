@@ -14,5 +14,6 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/singularityhub/sregistry-cli/tree/master) (0.0.x)
+ - instructions must be for Github app (personal token not scoped correctly) (0.0.3) 
  - first alpha release with uservoice and github helpers (0.0.2)
  - dummy information release on pypi (0.0.1)

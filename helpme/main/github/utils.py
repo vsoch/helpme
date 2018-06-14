@@ -35,18 +35,18 @@ def create_issue(title, body, repo, token):
 
     '''
     owner, name = repo.split('/')
-    url = 'https://api.github.com/repos/%s/%s/import/issues' % (owner, name)
+    url = 'https://api.github.com/repos/%s/%s/issues' % (owner, name)
     
-    data = {'issue': {'title': title, 'body': body }}
+    data = {'title': title, 'body': body }
 
     headers = { "Authorization": "token %s" % token,
-                "Accept": "application/vnd.github.golden-comet-preview+json" }
+                "Accept": "application/vnd.github.symmetra-preview+json" }
 
     response = requests.post(url, data=json.dumps(data), headers=headers)
 
-    if response.status_code == 202:
-        url = response.json()['url']
-        bot.info('https://www.github.com/%s/issues' %repo)
+    if response.status_code in [201, 202]:
+        url = response.json()['html_url']
+        bot.info(url)
         return url
 
     elif response.status_code == 404:

@@ -33,11 +33,23 @@ class Helper(HelperBase):
 
     def load_secrets(self):
         self.token = self._get_and_update_setting('HELPME_GITHUB_TOKEN')
+        self.check_env('HELPME_GITHUB_TOKEN', self.token)
 
-        if self.token is None:
-            bot.error('You must export HELPME_GITHUB_TOKEN to use Github')
+
+    def check_env(self, envar, value):
+        '''ensure that variable envar is set to some value, 
+           otherwise exit on error.
+        
+           Parameters
+           ==========
+           envar: the environment variable name
+           value: the setting that shouldn't be None
+        '''
+        if value is None:
+            bot.error('You must export %s to use Github' %envar)
             print('https://vsoch.github.io/helpme/helper-github')
             sys.exit(1)
+
 
     def _start(self, positionals):
 
