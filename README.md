@@ -2,6 +2,8 @@
 
 A command line helper when you need it.
 
+HelpMe is a free to use, open source command line tool that serves one purpose: to connect a user on a command line to a a resource to get help. The software provides a general framework for developers to add "helpers," or different support endpoints to work with "recorders," each a specific way of capturing information like messages, terminal recordings (asciinema), and environment, to easily submit to the endpoint. Importantly, the complex interaction of various application programming interfaces (APIs) with the user's terminal is presented in a simple and intuitive way that puts the user in control of the interaction. By default, the software comes ready to use for interaction with Github and the UserVoice ticketing softwarecommonly used in Research Computing.  The HelpMe [documentation base](https://vsoch.github.io/helpme) is rendered from the same repository and open for contribution. It provides ample detail for developers to add new helpers, recorders, and for users to install the software. For more details, please see the [paper](paper/paper.md).
+
 ![docs/assets/img/interface.png](docs/assets/img/interface.png)
 
 ## Docker
