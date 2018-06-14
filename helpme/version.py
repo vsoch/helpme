@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-__version__ = "0.0.3"
+__version__ = "0.0.31"
 AUTHOR = 'Vanessa Sochat'
 AUTHOR_EMAIL = 'vsochat@stanford.edu'
 NAME = 'helpme'
@@ -46,6 +46,7 @@ LICENSE = "LICENSE"
 
 INSTALL_REQUIRES = (
     ('requests', {'min_version': '2.18.4'}),
+    ('asciinema', {'min_version': '2.0.1'}),
 )
 
 ################################################################################
