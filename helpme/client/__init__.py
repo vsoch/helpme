@@ -142,7 +142,7 @@ def main():
 
     if args.command == "config": from .config import main
     if args.command == "list": from .list import main
-    if args.command in HELPME_HELPERS: from.help import main
+    if args.command in HELPME_HELPERS: from .help import main
 
     # Pass on to the correct parser
     return_code = 0
