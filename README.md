@@ -2,7 +2,7 @@
 
 A command line helper when you need it.
 
-[![DOI](https://zenodo.org/badge/71862620.svg)](https://zenodo.org/badge/latestdoi/71862620)
+[![DOI](http://joss.theoj.org/papers/10.21105/joss.00775/status.svg)](https://doi.org/10.21105/joss.00775)
 
 ![docs/assets/img/interface.png](docs/assets/img/interface.png)
 
