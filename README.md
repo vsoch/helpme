@@ -2,6 +2,8 @@
 
 A command line helper when you need it.
 
+[![DOI](https://zenodo.org/badge/71862620.svg)](https://zenodo.org/badge/latestdoi/71862620)
+
 ![docs/assets/img/interface.png](docs/assets/img/interface.png)
 
 # Overview
