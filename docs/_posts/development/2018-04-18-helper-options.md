@@ -17,6 +17,7 @@ a look at Github:
 
 
 ```
+
 [DEFAULT]
 
 [github]
@@ -25,6 +26,7 @@ user_prompt_repo = What is the Github repository that you want to post to?
 record_asciinema = True
 record_environment = True
 user_prompt_issue = Please describe the issue you are having
+
 ```
 
 The helper is going to be called in the order specified there. For example, 

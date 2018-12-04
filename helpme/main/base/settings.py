@@ -48,7 +48,7 @@ def get_configfile_user():
     # The inital file has a funny username
 
     if not os.path.exists(HELPME_CLIENT_SECRETS):
-        bot.debug('Generating settings file at %s' %HELPME_CLIENT_SECRETS)
+        bot.debug('Generating settings file at %s' % HELPME_CLIENT_SECRETS)
         name = RobotNamer().generate()
 
         # Generate the user config

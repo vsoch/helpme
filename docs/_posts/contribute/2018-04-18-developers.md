@@ -65,6 +65,8 @@ the section for Github might look like when we have turned on asciinema recordin
 and asked the user for two prompts:
 
 ```
+
+
 ```
 
 For a complete list of options that can be given to a helper, see the [options](/helpme/docs-options).
