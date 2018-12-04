@@ -66,4 +66,6 @@ HELPME_CLIENT = getenv("HELPME_CLIENT", "github")
 HELPME_WORKERS = int(getenv("HELPME_PYTHON_THREADS", 9))
 _secrets = os.path.join(USERHOME, "helpme.cfg")
 HELPME_CLIENT_SECRETS = getenv('HELPME_CLIENT_SECRETS', _secrets)
-HELPME_HELPERS = ['github', 'uservoice']
+HELPME_HELPERS = ['github', 
+                  'uservoice', 
+                  'discourse']

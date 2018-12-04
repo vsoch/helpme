@@ -15,6 +15,7 @@ for user variables, we send help requests to the various helpers. For example:
 
  - `helpme github` posts an issue on a Github board
  - `helpme uservoice` creates a ticket on uservoice
+ - `helpme discourse` creates a post on a discourse board
 
 Please [post issues](https://www.github.com/vsoch/helpme/issues)
 with questions, feedback, or just to say hello, and see our [complete documentation here](https://vsoch.github.io/helpme).
@@ -56,6 +57,9 @@ $ docker build -t vanessa/helpme .
 ```bash
 # Post an issue to a Github Repo.
 $ helpme github vsoch/helpme
+
+# Post a question to a discourse board
+$ helpme discourse
 
 # Post a ticket to UserVoice
 $ helpme uservoice

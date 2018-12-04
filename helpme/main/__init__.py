@@ -41,6 +41,7 @@ def get_helper(name=None, quiet=True, **kwargs):
     # If no obvious credential provided, we can use HELPME_CLIENT
     if   HELPME_CLIENT == 'github': from .github import Helper;
     elif HELPME_CLIENT == 'uservoice': from .uservoice import Helper
+    elif HELPME_CLIENT == 'discourse': from .discourse import Helper
     else: from .github import Helper
 
     Helper.name = HELPME_CLIENT
