@@ -1,6 +1,6 @@
 '''
 
-Copyright (c) 2017, Vanessa Sochat
+Copyright (c) 2017-2018, Vanessa Sochat
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-__version__ = "0.0.35"
+__version__ = "0.0.36"
 AUTHOR = 'Vanessa Sochat'
 AUTHOR_EMAIL = 'vsochat@stanford.edu'
 NAME = 'helpme'
