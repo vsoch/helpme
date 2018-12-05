@@ -29,6 +29,7 @@ from .settings import (
     get_and_update_setting,
     load_config,
     load_config_user,
+    load_envars,
     remove_setting,
     update_settings
 )
@@ -282,6 +283,7 @@ class HelperBase(object):
 # Settings
 HelperBase._load_config = load_config
 HelperBase._load_config_user = load_config_user
+HelperBase._load_envars = load_envars
 HelperBase._remove_setting = remove_setting
 HelperBase._get_setting = get_setting
 HelperBase._get_settings = get_settings

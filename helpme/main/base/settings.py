@@ -103,6 +103,30 @@ def _load_config(configfile, section=None):
         return config
 
 
+# Environment ##################################################################
+
+
+def load_envars(self, items):
+    '''load a tuple of environment variables, to add to the user settings
+    
+        Example:
+ 
+        items = [('HELPME_DISCOURSE_BOARD', 'user_prompt_board'),
+                 ('HELPME_DISCOURSE_CATEGORY', 'user_prompt_category')]
+
+        # Note that it's added to the client with an underscore:
+        self._load_envars()
+    ''' 
+    for item in items:
+        envar = item[0]
+        key = item[1]
+        value = self._get_and_update_setting(envar)
+
+        if value != None:
+            self.data[key] = value
+            self.config.remove_option(self.name, key)
+
+
 # Get and Update ###############################################################
 
 def get_setting(self, name, section=None, default=None, user=True):

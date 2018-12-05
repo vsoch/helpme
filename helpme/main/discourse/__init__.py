@@ -36,6 +36,22 @@ class Helper(HelperBase):
         self.token = self._get_and_update_setting('HELPME_DISCOURSE_TOKEN')
         self.check_env('HELPME_DISCOURSE_TOKEN', self.token)
 
+        # Load additional parameters for board category and name
+        self._update_envars()
+
+
+    def _update_envars(self):
+        '''load additional variables from the environment, including a board
+           and a category. If not set, we will then look at positionals for
+           the board. If not set after positions, we prompt the user.
+        '''
+                  # Environment variable     # config setting under discourse
+        items = [('HELPME_DISCOURSE_BOARD', 'user_prompt_board'),
+                 ('HELPME_DISCOURSE_CATEGORY', 'user_prompt_category'),
+                 ('HELPME_DISCOURSE_USERNAME', 'user_prompt_username')]
+
+        self._load_envars(items)
+        
     def check_env(self, envar, value):
         '''ensure that variable envar is set to some value, 
            otherwise exit on error.
@@ -58,14 +74,19 @@ class Helper(HelperBase):
         if positionals:
 
             # Let's enforce https. If the user wants http, they can specify it
-
-            board = positionals[0]
+            board = positionals.pop(0)
             if not board.startswith('http'):
                 board = 'https://%s' % board
 
             self.data['user_prompt_board'] = board
             self.config.remove_option('discourse','user_prompt_board')
 
+            # If the user provides another argument, it's the category
+            if len(positionals) > 0:
+                category = positionals.pop(0)
+                self.data['user_prompt_category'] = category
+                self.config.remove_option('discourse','user_prompt_category')
+             
 
     def _submit(self):
         '''submit the question to the board. When we get here we should have 
@@ -81,6 +102,8 @@ class Helper(HelperBase):
         body = self.data['user_prompt_issue']
         title = self.data['user_prompt_title']
         board = self.data['user_prompt_board']
+        username = self.data['user_prompt_username']
+        category = self.data['user_prompt_category']
 
         # Step 1: Environment
 
@@ -105,5 +128,5 @@ class Helper(HelperBase):
 
         # Submit the issue
 
-        post = create_post(title, body, repo, self.token)
+        post = create_post(title, body, board, category, username, self.token)
         return post
