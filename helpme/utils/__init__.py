@@ -20,7 +20,8 @@ from .fileio import (
     write_json
 )
 from .settings import (
-    get_configfile
+    get_configfile,
+    generate_keypair
 )
 
 from .format import envars_to_markdown

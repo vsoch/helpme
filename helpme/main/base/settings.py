@@ -49,6 +49,12 @@ def get_configfile_user():
 
     if not os.path.exists(HELPME_CLIENT_SECRETS):
         bot.debug('Generating settings file at %s' % HELPME_CLIENT_SECRETS)
+        config_dir = os.path.dirname(HELPME_CLIENT_SECRETS)
+
+        # The configuration directory might be needed for different clients
+        if not os.path.exists(config_dir):
+            mkdir_p(config_dir)
+
         name = RobotNamer().generate()
 
         # Generate the user config

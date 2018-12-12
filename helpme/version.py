@@ -58,5 +58,10 @@ INSTALL_USERVOICE = (
 )
 
 
+INSTALL_DISCOURSE = (
+    ('PGPy', {'min_version': '0.4.3'}),
+)
+
 INSTALL_ALL = (INSTALL_REQUIRES +
-               INSTALL_USERVOICE)
+               INSTALL_USERVOICE +
+               INSTALL_DISCOURSE)

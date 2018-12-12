@@ -17,11 +17,47 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
+from helpme.logger import RobotNamer
 from helpme.logger import bot
 import sys
+from requests import Session, Request
 import requests
 import json
 
+
+def request_token(board):
+    '''send a public key to request a token
+
+       board: the discourse board to post to
+    '''
+    # Generate client id and load public key
+    client_id = 'helpme-%s' % RobotNamer().generate()
+    client_id = self._get_and_update_setting('DISCOURSE_CLIENT_ID', client_id)
+
+    pubkey = str(self.keypub).strip('\n')
+
+    data = {'scopes': 'write',
+            'client_id': client_id,
+            'application_name': 'helpme',
+            'public_key': pubkey,
+            'nonce': '666401a65ea121858be20f0925524453',
+            'auth_redirect':  "%s/user-api-key" % board }
+
+    # Put together url to open for user
+    session = Session()
+    prompt = Request('GET', "%s/user-api-key/new" % board, params=data).prepare()
+    bot.newline()
+    bot.info('Open browser to:')
+    bot.info(prompt.url)
+    bot.newline()
+   
+
+    response = requests.get("%s/user-api-key/new" % board,
+                            headers=headers,
+                            data=data)
+
+#So, the URL you need to go to you be this: 
+#https://stage.neurostars.org/user-api-key/new?scopes=write&client_id=areallysecureid&auth_redirect=https%3A%2F%2Fstage.neurostars.org%2Fuser-api-key&application_name=helpme&public_key=-----BEGIN+PUBLIC+KEY-----%0AMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDh7BS7Ey8hfbNhlNAW%2F47pqT7w%0AIhBz3UyBYzin8JurEQ2pY9jWWlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFV%0Ap16Op3CHLJnnJKKBMNdXMy0yDfCAHZtqxeBOTcCo1Vt%2FbHpIgiK5kmaekyXIaD0n%0Aw0z%2FBYpOgZ8QwnI5ZwIDAQAB%0A-----END+PUBLIC+KEY-----%0A&nonce=666401a65ea121858be20f0925524453
 
 def create_post(title, body, board, category, username, token):
     '''create a Discourse post, given a title, body, board, and token.
@@ -51,7 +87,7 @@ def create_post(title, body, board, category, username, token):
 
     category_id = categories.get(category, None)
 
-    headers = { "Content-Type": "multipart/form-data;"}
+    headers = {"Content-Type": "multipart/form-data;"}
 
     # First get the category ids
     data = {'api_key': token, 

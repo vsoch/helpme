@@ -64,7 +64,12 @@ def getenv(variable_key, default=None, required=False, silent=True):
 USERHOME = get_userhome()
 HELPME_CLIENT = getenv("HELPME_CLIENT", "github")
 HELPME_WORKERS = int(getenv("HELPME_PYTHON_THREADS", 9))
-_secrets = os.path.join(USERHOME, "helpme.cfg")
+
+# The configuration directory can hold the default config, along with keys
+_config = os.path.join(USERHOME, ".helpme")
+HELPME_CONFIG_DIR = getenv('HELPME_CONFIG_DIR', _config)
+
+_secrets = os.path.join(HELPME_CONFIG_DIR, "helpme.cfg")
 HELPME_CLIENT_SECRETS = getenv('HELPME_CLIENT_SECRETS', _secrets)
 HELPME_HELPERS = ['github', 
                   'uservoice', 

@@ -19,10 +19,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from helpme.main import HelperBase
 from helpme.action import ( record_asciinema, upload_asciinema )
-from helpme.utils import envars_to_markdown
+from helpme.utils import ( envars_to_markdown, generate_keypair )
 from helpme.logger import ( bot )
-from .utils import create_post
+from .utils import( create_post, request_token )
 import os
+import pgpy
 import sys
 
 class Helper(HelperBase):
@@ -30,11 +31,17 @@ class Helper(HelperBase):
     def __init__(self, **kwargs):
  
         self.name = "discourse"
+
+        # Discourse needs a keypair, generate if not found
+        self.keypair = self._generate_keys()
         super(Helper, self).__init__(**kwargs)
 
     def load_secrets(self):
         self.token = self._get_and_update_setting('HELPME_DISCOURSE_TOKEN')
-        self.check_env('HELPME_DISCOURSE_TOKEN', self.token)
+
+        # If the user doesn't have a token, generate one
+        if not self.token:
+            bot.info('Generating token...')
 
         # Load additional parameters for board category and name
         self._update_envars()
@@ -65,6 +72,32 @@ class Helper(HelperBase):
             bot.error('You must export %s to use Discourse' % envar)
             print('https://vsoch.github.io/helpme/helper-github')
             sys.exit(1)
+
+
+    def _generate_keys(self):
+        '''the discourse API requires the interactions to be signed, so we 
+           generate a keypair on behalf of the user
+        '''
+        from helpme.defaults import HELPME_CLIENT_SECRETS
+        keypair_dir = os.path.join(os.path.dirname(HELPME_CLIENT_SECRETS),
+                                   'discourse')
+
+        # We store the private and public keys separately
+        keypair_name = 'hmpgp'
+        key_public = os.path.join(keypair_dir, "%s.pub" % keypair_name)
+        key_private = os.path.join(keypair_dir, "%s.priv" % keypair_name)
+
+        # We likely won't have generated it on first use!
+        if not os.path.exists(key_public) or not os.path.exists(key_private):
+            bot.info('Generating keypair for hashing requests!')
+            key_pub, key_priv = generate_keypair(self.name, keypair_dir, keypair_name)           
+        else:
+            key_pub, _ = pgpy.PGPKey.from_file(key_public)
+            key_priv, _ = pgpy.PGPKey.from_file(key_private)
+
+        # Save to the client for later signing
+        self.keypub = key_pub
+        self.keypriv = key_priv
 
 
     def _start(self, positionals):

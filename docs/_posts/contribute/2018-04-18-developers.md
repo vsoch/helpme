@@ -29,10 +29,11 @@ helper = get_helper('github')
 There are two primary configuration files, both are called helpme.cfg, but helpme.cfg
 lives with the application installation (at the root of the helpme module, meaning 
 it might be editable by a system admin or owner but not the user) and the other lives
-in the user's $HOME folder. The latter contains user-specific settings like tokens 
-and preferences. Each helper has its own namespace in the configuration file. For
-example, here we should how the helper "github" might store a variable from the
-environment called `HELPME_GITHUB_TOKEN`:
+in the user's $HOME folder in a subfolder called `.helpme`. The latter contains 
+user-specific settings like tokens and preferences. Each helper has its 
+own namespace in the configuration file. For example, here we should how the 
+helper "github" might store a variable from the environment called 
+`HELPME_GITHUB_TOKEN`:
 
 ```
 [DEFAULT]

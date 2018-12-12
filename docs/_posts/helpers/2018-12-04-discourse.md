@@ -22,14 +22,34 @@ Let's get started!
 ## Getting Started
 If you need to test this first, see the [developer setup](#developer-setup)
 instructions at the bottom of the page. If not, continue reading to interact
-with an active discourse installation.
+with an active discourse installation. If you haven't yet, install the 
+dependencies for the discourse client, either just for discourse (or for all clients).
+
+```bash
+pip install discourse[uservoice]
+pip install discourse[all]
+```
+
+Note that your system will need openssl libraries. If you get an error message,
+see the [dependencies to install here](https://pgpy.readthedocs.io/en/latest/).
 
 ### Generate a Token
 
-There are two kinds of tokens! For each, either you will need to be an administrator,
-or ask an administrator to generate one for you.
+The ease of this step will depend on if you have an older version of discourse 
+(one where an administrator needs to generate a token for you) OR a recent 
+update that allows users to generate their own. 
 
-#### All Users Token
+#### User Generation of Tokens
+
+If your discourse site will allow you to generate a token, you can export your
+global `HELPME_DISCOURSE_TOKEN=`
+
+
+
+#### Admin Generation of Tokens
+
+**All Users Token**
+
 You can generate a single global token (giving access to
 all users) to authenticate with the API. This token would be more appropriate for
 applications that must act on behalf of all users, and likely not recommended for
@@ -49,7 +69,8 @@ Then you can click on the API tag to generate your token!
 <img src="{{ site.baseurl }}/assets/img/helpers/discourse-token.png">
 </a>
 
-#### User Token
+**User Token**
+
 Discourse [also supports](https://meta.discourse.org/t/discourse-api-authentication/25941) 
 creating tokens on a per user basis. If you are a board user and don't have
 admin, you should contact your board admin to ask for a token to be generated for you.

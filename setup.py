@@ -64,6 +64,7 @@ if __name__ == "__main__":
 
     INSTALL_REQUIRES = get_reqs(lookup, 'INSTALL_ALL')
     INSTALL_USERVOICE = get_reqs(lookup, 'INSTALL_USERVOICE')
+    INSTALL_DISCOURSE = get_reqs(lookup, 'INSTALL_DISCOURSE') 
 
     setup(name=NAME,
           version=VERSION,
@@ -83,7 +84,8 @@ if __name__ == "__main__":
           extras_require={
 
               'all': [INSTALL_REQUIRES],
-              'uservoice': [INSTALL_USERVOICE]
+              'uservoice': [INSTALL_USERVOICE],
+              'discourse': [INSTALL_DISCOURSE]
 
           },
           classifiers=[

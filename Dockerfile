@@ -2,8 +2,10 @@ FROM continuumio/miniconda3
 
 # docker build -t vanessa/helpme .
 
-RUN apt-get update && apt-get install -y gcc
-
+RUN apt-get update && apt-get install -y gcc \
+                                        build-essential \ 
+                                        libssl-dev \
+                                        libffi-dev
 RUN mkdir /code
 ADD . /code
 WORKDIR /code
