@@ -51,10 +51,7 @@ def request_token(board):
     bot.info(prompt.url)
     bot.newline()
    
-
-    response = requests.get("%s/user-api-key/new" % board,
-                            headers=headers,
-                            data=data)
+    #TODO: the user will open browser, get a token, and then have it saved here.
 
 #So, the URL you need to go to you be this: 
 #https://stage.neurostars.org/user-api-key/new?scopes=write&client_id=areallysecureid&auth_redirect=https%3A%2F%2Fstage.neurostars.org%2Fuser-api-key&application_name=helpme&public_key=-----BEGIN+PUBLIC+KEY-----%0AMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDh7BS7Ey8hfbNhlNAW%2F47pqT7w%0AIhBz3UyBYzin8JurEQ2pY9jWWlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFV%0Ap16Op3CHLJnnJKKBMNdXMy0yDfCAHZtqxeBOTcCo1Vt%2FbHpIgiK5kmaekyXIaD0n%0Aw0z%2FBYpOgZ8QwnI5ZwIDAQAB%0A-----END+PUBLIC+KEY-----%0A&nonce=666401a65ea121858be20f0925524453
