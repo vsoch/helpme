@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from helpme.logger import RobotNamer
 from helpme.logger import bot
 import sys
+import uuid
 from requests import Session, Request
 import requests
 import json
@@ -33,6 +34,7 @@ def request_token(board):
     # Generate client id and load public key
     client_id = 'helpme-%s' % RobotNamer().generate()
     client_id = self._get_and_update_setting('DISCOURSE_CLIENT_ID', client_id)
+    nonce = str(uuid.uuid4())
 
     pubkey = str(self.keypub).strip('\n')
 
@@ -40,7 +42,7 @@ def request_token(board):
             'client_id': client_id,
             'application_name': 'helpme',
             'public_key': pubkey,
-            'nonce': '666401a65ea121858be20f0925524453',
+            'nonce': nonce,
             'auth_redirect':  "%s/user-api-key" % board }
 
     # Put together url to open for user
