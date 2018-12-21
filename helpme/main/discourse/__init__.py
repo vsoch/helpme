@@ -19,8 +19,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from helpme.main import HelperBase
 from helpme.action import ( record_asciinema, upload_asciinema )
-from helpme.utils import ( envars_to_markdown, generate_keypair )
-from helpme.logger import ( bot )
+from helpme.utils import ( 
+    envars_to_markdown, 
+    generate_keypair, 
+    load_keypair
+)
+from helpme.logger import bot
 from .utils import( create_post, request_token )
 import os
 import pgpy
@@ -39,13 +43,12 @@ class Helper(HelperBase):
     def load_secrets(self):
         self.token = self._get_and_update_setting('HELPME_DISCOURSE_TOKEN')
 
-        # If the user doesn't have a token, generate one
-        if not self.token:
-            bot.info('Generating token...')
+        # Generate client id with application name and version
+        cid = 'helpme-%s' % self._version
+        self.client_id = self._get_and_update_setting('DISCOURSE_CLIENT_ID', cid)
 
         # Load additional parameters for board category and name
         self._update_envars()
-
 
     def _update_envars(self):
         '''load additional variables from the environment, including a board
@@ -89,15 +92,14 @@ class Helper(HelperBase):
 
         # We likely won't have generated it on first use!
         if not os.path.exists(key_public) or not os.path.exists(key_private):
-            bot.info('Generating keypair for hashing requests!')
-            key_pub, key_priv = generate_keypair(self.name, keypair_dir, keypair_name)           
+            bot.info('Generating keypair...')
+            keys = generate_keypair(self.name, keypair_dir, keypair_name)           
         else:
-            key_pub, _ = pgpy.PGPKey.from_file(key_public)
-            key_priv, _ = pgpy.PGPKey.from_file(key_private)
+            keys = load_keypair(self.name, keypair_dir, keypair_name)
 
         # Save to the client for later signing
-        self.keypub = key_pub
-        self.keypriv = key_priv
+        self.keypub = keys['public']
+        self.keypriv = keys['private']
 
 
     def _start(self, positionals):
@@ -137,6 +139,11 @@ class Helper(HelperBase):
         board = self.data['user_prompt_board']
         username = self.data['user_prompt_username']
         category = self.data['user_prompt_category']
+
+        # Step 1: Token
+        if self.token == None:
+            self.token = request_token(board, self.client_id)
+            self._get_and_update_setting('HELPME_DISCOURSE_TOKEN', self.token)
 
         # Step 1: Environment
 

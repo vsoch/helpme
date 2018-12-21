@@ -26,24 +26,20 @@ import requests
 import json
 
 
-def request_token(board):
+enter_input = getattr(__builtins__, 'raw_input', input)
+
+def request_token(board, client_id):
     '''send a public key to request a token
 
        board: the discourse board to post to
     '''
-    # Generate client id and load public key
-    client_id = 'helpme-%s' % RobotNamer().generate()
-    client_id = self._get_and_update_setting('DISCOURSE_CLIENT_ID', client_id)
     nonce = str(uuid.uuid4())
-
-    pubkey = str(self.keypub).strip('\n')
 
     data = {'scopes': 'write',
             'client_id': client_id,
-            'application_name': 'helpme',
-            'public_key': pubkey,
-            'nonce': nonce,
-            'auth_redirect':  "%s/user-api-key" % board }
+            'application_name': 'HelpMe',
+            'public_key': self.keypub,
+            'nonce': nonce }
 
     # Put together url to open for user
     session = Session()
@@ -53,10 +49,22 @@ def request_token(board):
     bot.info(prompt.url)
     bot.newline()
    
-    #TODO: the user will open browser, get a token, and then have it saved here.
+    # the user will open browser, get a token, and then have it saved here.
+    bot.info('Copy paste token:')
 
-#So, the URL you need to go to you be this: 
-#https://stage.neurostars.org/user-api-key/new?scopes=write&client_id=areallysecureid&auth_redirect=https%3A%2F%2Fstage.neurostars.org%2Fuser-api-key&application_name=helpme&public_key=-----BEGIN+PUBLIC+KEY-----%0AMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDh7BS7Ey8hfbNhlNAW%2F47pqT7w%0AIhBz3UyBYzin8JurEQ2pY9jWWlY8CH147KyIZf1fpcsi7ZNxGHeDhVsbtUKZxnFV%0Ap16Op3CHLJnnJKKBMNdXMy0yDfCAHZtqxeBOTcCo1Vt%2FbHpIgiK5kmaekyXIaD0n%0Aw0z%2FBYpOgZ8QwnI5ZwIDAQAB%0A-----END+PUBLIC+KEY-----%0A&nonce=666401a65ea121858be20f0925524453
+    lines = []
+
+    # The token is multi line, so collect until user presses enter (empty line)
+    while True:
+        line = enter_input().strip()
+        if line:
+            lines.append(line)
+        else:
+            break
+
+    token = '\n'.join(lines)
+    return token
+
 
 def create_post(title, body, board, category, username, token):
     '''create a Discourse post, given a title, body, board, and token.
@@ -69,6 +77,7 @@ def create_post(title, body, board, category, username, token):
        token: the user's personal (or global) discourse token
 
     '''
+
     category_url = "%s/categories.json" % board
     response = requests.get(category_url)
 
@@ -89,7 +98,7 @@ def create_post(title, body, board, category, username, token):
     headers = {"Content-Type": "multipart/form-data;"}
 
     # First get the category ids
-    data = {'api_key': token, 
+    data = {'api_key': self.token, 
             'api_username': username,
             'title': title,
             'raw': body,

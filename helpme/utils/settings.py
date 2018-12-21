@@ -27,6 +27,68 @@ def get_configfile():
     '''
     return os.path.abspath(os.path.join(get_installdir(), 'helpme.cfg'))
 
+def load_keypair(name, keypair_dir, keypair_name):
+    '''load a keypair into a dictionary with keys public and private
+
+       Parameters
+       ==========
+       name: the name of the client (e.g., discourse)
+       keypair_dir: the directory to store the keypair
+       keypair_name: the name of the file (defaults to hmpgp)
+    '''
+    keys = dict()
+
+    keypair_private = os.path.join(keypair_dir, "%s.priv" % keypair_name)
+    keypair_public = os.path.join(keypair_dir, "%s.pub" % keypair_name)
+
+    # Ensure that both files exist
+    for key_file in [keypair_private, keypair_public]:
+        if not os.path.exists(keypair_file):
+            bot.error('Cannot find %s!' % keypair_file)
+            sys.exit(1)
+
+    # Read keys (strings) into dictionary
+    keys['public'] = read_file(keypair_public)
+    keys['private'] = read_file(keypair_private)
+
+    return keys
+
+def generate_keypair(name, keypair_dir, keypair_name):
+    '''generate_keypair is used by some of the helpers that need a keypair.
+       We return the key object, which has the key (private and public)
+
+       Parameters
+       ==========
+       name: the name of the client (e.g., discourse)
+       keypair_dir: the directory to store the keypair
+       keypair_name: the name of the file (defaults to hmpgp)
+    '''
+
+    from Crypto.PublicKey import RSA
+    username = getpass.getuser()
+    uid = 'Helpme %s' % name
+
+    key = RSA.generate(2048)
+    privatekey = key.exportKey(passphrase=uid, pkcs=8)
+    publickey = key.publickey().exportKey()
+
+    keys = {'private': privatekey.decode('utf-8'),
+            'public': publickey.decode('utf-8') }
+
+    # Save private
+    keypair_private = os.path.join(keypair_dir, "%s.priv" % keypair_name)
+    with open(keypair_private, 'w') as filey:
+        filey.write(keys['private'])
+
+    # Save public
+    keypair_public = os.path.join(keypair_dir, "%s.pub" % keypair_name)
+    with open(keypair_public, 'w') as filey:
+        filey.write(keys['public'])
+
+    keys = {'private': privatekey.decode('utf-8'),
+            'public': publickey.decode('utf-8') }
+    return keys
+
 
 def generate_keypair(name, keypair_dir, keypair_name):
     '''generate_keypair is used by some of the helpers that need a keypair.
@@ -54,11 +116,7 @@ def generate_keypair(name, keypair_dir, keypair_name):
     if not os.path.exists(keypair_dir):
         mkdir_p(keypair_dir)
 
-    # This is a primary key, RSA
-    key = pgpy.PGPKey.new(PubKeyAlgorithm.RSAEncryptOrSign, 4096)
-
     # create a user id for helpme-discourse
-    uid = pgpy.PGPUID.new(username, comment='Helpme %s' % name)
 
     # Add the new user id to the key, we need to add all because PGPy doesn't have
     # built in defaults. These are similar to defaults from GNU PG 2.1.x

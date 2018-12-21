@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from helpme.logger import ( bot, RobotNamer )
 from helpme.utils import ( confirm_prompt, regexp_prompt )
 from helpme.action import record_asciinema
+from helpme.version import __version__
 
 from configparser import NoOptionError
 
@@ -54,6 +55,7 @@ class HelperBase(object):
         self.config = self._load_config()
         self.config_user = self._load_config_user()
         self.load_secrets()
+        self._version = __version__
 
         # Data and variables collected from the user
         self.data = kwargs or dict()

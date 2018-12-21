@@ -20,37 +20,67 @@ a web interface, with the helpme client you can:
 Let's get started!
 
 ## Getting Started
+
 If you need to test this first, see the [developer setup](#developer-setup)
 instructions at the bottom of the page. If not, continue reading to interact
 with an active discourse installation. If you haven't yet, install the 
 dependencies for the discourse client, either just for discourse (or for all clients).
 
 ```bash
-pip install discourse[uservoice]
-pip install discourse[all]
+pip install helpme[discourse]
+pip install helpme[all]
 ```
 
-Note that your system will need openssl libraries. If you get an error message,
-see the [dependencies to install here](https://pgpy.readthedocs.io/en/latest/).
-
-### Generate a Token
-
-The ease of this step will depend on if you have an older version of discourse 
-(one where an administrator needs to generate a token for you) OR a recent 
-update that allows users to generate their own. 
+The discourse helper usage will vary depending on the version of the discourse
+installation you are working with. If you have an older version of discourse, 
+ you will need to ask an administrator to generate a token for you. If you
+have a more recent version, and if the installation allows users to do so,
+you will be allowed to generate your own. Proceed below to the section
+that best describes your use case.
 
 #### User Generation of Tokens
 
-If your discourse site will allow you to generate a token, you can export your
-global `HELPME_DISCOURSE_TOKEN=`
+If your discourse site will allow you to generate a token, you simply need
+to be logged into your browser when you first run helpme. This means that 
+you should first run it locally, and then export the token in any command
+line environments where you don't have a browser.
 
+**Step 1. Log into your browser**
+
+Once logged in, you can simply walk through using the client (see section [Usage](#Usage)
+and it will ask you to copy paste a token into your terminal from the browser.
+Once this is done, the token will be added to your helpme configuration file,
+in case you need to export it to another environment for use.
 
 
 #### Admin Generation of Tokens
+If your discourse installation doesn't support users generating their own tokens,
+then have no fear! Your administrator can generate one for you. There are again
+two options, and the first is recommended.
+
+**User Token**
+
+Discourse [supports](https://meta.discourse.org/t/discourse-api-authentication/25941) 
+creating tokens on a per user basis. If you are a board user and don't have
+admin, you should contact your board admin to ask for a token to be generated for you.
+If you do have admin access, you can navigate to the Admin Settings --> Users
+panel:
+
+<img src="{{ site.baseurl }}/assets/img/helpers/discourse-admin-users.png">
+
+
+Click on a user of interest, and navigate down to the "Permissions" section.
+
+<a href="{{ site.baseurl }}/assets/img/helpers/discourse-user-permissions.png">
+<img src="{{ site.baseurl }}/assets/img/helpers/discourse-user-permissions.png">
+</a>
+
+And then click "generate." It will show a token.
+
 
 **All Users Token**
 
-You can generate a single global token (giving access to
+You can also generate a single global token (giving access to
 all users) to authenticate with the API. This token would be more appropriate for
 applications that must act on behalf of all users, and likely not recommended for
 helpme. 
@@ -69,25 +99,6 @@ Then you can click on the API tag to generate your token!
 <img src="{{ site.baseurl }}/assets/img/helpers/discourse-token.png">
 </a>
 
-**User Token**
-
-Discourse [also supports](https://meta.discourse.org/t/discourse-api-authentication/25941) 
-creating tokens on a per user basis. If you are a board user and don't have
-admin, you should contact your board admin to ask for a token to be generated for you.
-If you do have admin access, you can navigate to the Admin Settings --> Users
-panel:
-
-<img src="{{ site.baseurl }}/assets/img/helpers/discourse-admin-users.png">
-
-
-Click on a user of interest, and navigate down to the "Permissions" section.
-
-<a href="{{ site.baseurl }}/assets/img/helpers/discourse-user-permissions.png">
-<img src="{{ site.baseurl }}/assets/img/helpers/discourse-user-permissions.png">
-</a>
-
-And then click "generate." It will show a token.
-
 
 Whichever method you choose, export the token to the environment. It will be 
 found by the client when you start helpme. 
@@ -99,6 +110,7 @@ export HELPME_DISCOURSE_TOKEN=xxxxxxxxxxxxxxxxxxxxx
 Once you have exported your token, you can use the client.  The token will be 
 found the first time you run the client, and cached in your `$HOME/helpme.cfg`
 file. If you are interested in how this works, see the [developer](/helpme/docs-development) documentation.
+
 
 ## Setting Defaults
 

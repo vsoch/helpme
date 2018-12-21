@@ -59,7 +59,7 @@ INSTALL_USERVOICE = (
 
 
 INSTALL_DISCOURSE = (
-    ('PGPy', {'min_version': '0.4.3'}),
+    ('pycryptodome', {'min_version', '3.7.2'}),
 )
 
 INSTALL_ALL = (INSTALL_REQUIRES +
