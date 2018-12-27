@@ -1,5 +1,5 @@
 ---
-date: 2018-12-04
+date: 2018-12-27
 title: Discourse Helper
 permalink: /helper-discourse
 categories:
@@ -42,8 +42,9 @@ that best describes your use case.
 
 If your discourse site will allow you to generate a token, you simply need
 to be logged into your browser when you first run helpme. This means that 
-you should first run it locally, and then export the token in any command
-line environments where you don't have a browser.
+you should first run helpme locally (not in a cluster environment), 
+and then export the token in any command line environments where you don't 
+have a browser.
 
 **Step 1. Log into your browser**
 
@@ -52,65 +53,42 @@ and it will ask you to copy paste a token into your terminal from the browser.
 Once this is done, the token will be added to your helpme configuration file,
 in case you need to export it to another environment for use.
 
+**Step 2: Run the client**
 
-#### Admin Generation of Tokens
-If your discourse installation doesn't support users generating their own tokens,
-then have no fear! Your administrator can generate one for you. There are again
-two options, and the first is recommended.
+If you are using a recent version of discourse, the client will have you open
+a browser and copy paste a message into the terminal on first use. You will
+only have to do this once. 
 
-**User Token**
-
-Discourse [supports](https://meta.discourse.org/t/discourse-api-authentication/25941) 
-creating tokens on a per user basis. If you are a board user and don't have
-admin, you should contact your board admin to ask for a token to be generated for you.
-If you do have admin access, you can navigate to the Admin Settings --> Users
-panel:
-
-<img src="{{ site.baseurl }}/assets/img/helpers/discourse-admin-users.png">
-
-
-Click on a user of interest, and navigate down to the "Permissions" section.
-
-<a href="{{ site.baseurl }}/assets/img/helpers/discourse-user-permissions.png">
-<img src="{{ site.baseurl }}/assets/img/helpers/discourse-user-permissions.png">
-</a>
-
-And then click "generate." It will show a token.
-
-
-**All Users Token**
-
-You can also generate a single global token (giving access to
-all users) to authenticate with the API. This token would be more appropriate for
-applications that must act on behalf of all users, and likely not recommended for
-helpme. 
-
-If you want this level of token and have admin status (such as with the container deployment above) if you 
-click on your user icon in the top right and then Settings, you will see a button for "admin" in the
-top right:
-
-<a href="{{ site.baseurl }}/assets/img/helpers/discourse-admin-panel.png">
-<img src="{{ site.baseurl }}/assets/img/helpers/discourse-admin-panel.png">
-</a>
-
-Then you can click on the API tag to generate your token!
-
-<a href="{{ site.baseurl }}/assets/img/helpers/discourse-token.png">
-<img src="{{ site.baseurl }}/assets/img/helpers/discourse-token.png">
-</a>
-
-
-Whichever method you choose, export the token to the environment. It will be 
-found by the client when you start helpme. 
+**Moving to a cluster**
+The first time you use helpme on a cluster (when you've already generated a token)
+you should export the `HELPME_DISCOURSE_TOKEN` and `HELPME_DISCOURSE_CLIENT_ID`
+to your environment.
 
 ```bash
-export HELPME_DISCOURSE_TOKEN=xxxxxxxxxxxxxxxxxxxxx
+export HELPME_DISCOURSE_TOKEN=xxxxxxxxxxxxxxxxxxxxxx
+export HELPME_DISCOURSE_CLIENT_ID=helpme-arid-caramel-1234
 ```
 
-Once you have exported your token, you can use the client.  The token will be 
-found the first time you run the client, and cached in your `$HOME/helpme.cfg`
-file. If you are interested in how this works, see the [developer](/helpme/docs-development) documentation.
+You can find these variables in your helpme configuration file under "discourse":
 
+```bash
+cat $HOME/.helpme/helpme.cfg
+...
+
+[discourse]
+discourse_client_id = helpme-phat-chair-9993
+helpme_discourse_token = xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+If you are using an older version of discourse and need an admin to generate a 
+token for you, simply export that token as follows:
+
+```bash
+export HELPME_DISCOURSE_TOKEN=xxxxxxxxxxxxxxxxxxxxxx
+```
+
+See [admin token generation](#admin-token-generation) if you
+are an admin and need to generate one or more tokens for your users.
 
 ## Setting Defaults
 
@@ -120,7 +98,7 @@ include the discourse board, your username, and the category to post to. If you 
 you will provide it as an argument like this:
 
 ```bash
-$ helpme discourse neurostars.org
+$ helpme discourse stage.neurostars.org
 ```
 
 But let's say, for example, that we always are going to be using neurostars! 
@@ -153,6 +131,16 @@ Finally, you can also set your username.
 export HELPME_DISCOURSE_USERNAME=dinosaur
 ```
 
+The response might look like this:
+
+```bash
+Please enter your choice [Y/N/y/n] : y
+https://stage.neurostars.org/t/who-knows-where-the-time-goes/22
+[submit=>discourse]
+```
+
+And then browse to [https://stage.neurostars.org/t/who-knows-where-the-time-goes/22](https://stage.neurostars.org/t/who-knows-where-the-time-goes/22)
+to see it.
 
 ## Ask for Help
 The main `discourse` command will ask for help from a Discourse board, meaning posting to it. 
@@ -215,6 +203,65 @@ And here is the post created above!
 <a href="{{ site.baseurl }}/assets/img/helpers/discourse-post.png">
 <img src="{{ site.baseurl }}/assets/img/helpers/discourse-post.png">
 </a>
+
+
+## Admin Token Generation
+If your discourse installation doesn't support users generating their own tokens,
+then have no fear! Your administrator can generate one for you. There are again
+two options, and the first is recommended.
+
+**User Token**
+
+Discourse [supports](https://meta.discourse.org/t/discourse-api-authentication/25941) 
+creating tokens on a per user basis. If you are a board user and don't have
+admin, you should contact your board admin to ask for a token to be generated for you.
+If you do have admin access, you can navigate to the Admin Settings --> Users
+panel:
+
+<img src="{{ site.baseurl }}/assets/img/helpers/discourse-admin-users.png">
+
+
+Click on a user of interest, and navigate down to the "Permissions" section.
+
+<a href="{{ site.baseurl }}/assets/img/helpers/discourse-user-permissions.png">
+<img src="{{ site.baseurl }}/assets/img/helpers/discourse-user-permissions.png">
+</a>
+
+And then click "generate." It will show a token.
+
+
+**All Users Token**
+
+You can also generate a single global token (giving access to
+all users) to authenticate with the API. This token would be more appropriate for
+applications that must act on behalf of all users, and likely not recommended for
+helpme. 
+
+If you want this level of token and have admin status (such as with the container deployment above) if you 
+click on your user icon in the top right and then Settings, you will see a button for "admin" in the
+top right:
+
+<a href="{{ site.baseurl }}/assets/img/helpers/discourse-admin-panel.png">
+<img src="{{ site.baseurl }}/assets/img/helpers/discourse-admin-panel.png">
+</a>
+
+Then you can click on the API tag to generate your token!
+
+<a href="{{ site.baseurl }}/assets/img/helpers/discourse-token.png">
+<img src="{{ site.baseurl }}/assets/img/helpers/discourse-token.png">
+</a>
+
+
+Whichever method you choose, export the token to the environment. It will be 
+found by the client when you start helpme. 
+
+```bash
+export HELPME_DISCOURSE_TOKEN=xxxxxxxxxxxxxxxxxxxxx
+```
+
+Once you have exported your token, you can use the client.  The token will be 
+found the first time you run the client, and cached in your `$HOME/helpme.cfg`
+file. If you are interested in how this works, see the [developer](/helpme/docs-development) documentation.
 
 
 ## Python API

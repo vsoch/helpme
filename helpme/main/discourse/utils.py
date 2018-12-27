@@ -17,19 +17,21 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
+from Crypto.Cipher import PKCS1_v1_5 as Cipher_PKCS1_v1_5
 from helpme.logger import RobotNamer
 from helpme.logger import bot
 import sys
+from tempfile import mktemp
+from base64 import b64decode
 import uuid
-from requests import Session, Request
 import requests
 import json
 
-
 enter_input = getattr(__builtins__, 'raw_input', input)
 
-def request_token(board, client_id):
-    '''send a public key to request a token
+def request_token(self, board):
+    '''send a public key to request a token. When we call this function,
+       we already have an RSA key at self.key
 
        board: the discourse board to post to
     '''
@@ -38,35 +40,61 @@ def request_token(board, client_id):
     data = {'scopes': 'write',
             'client_id': client_id,
             'application_name': 'HelpMe',
-            'public_key': self.keypub,
+            'public_key': self.public_key.replace("'",""),
             'nonce': nonce }
 
-    # Put together url to open for user
-    session = Session()
-    prompt = Request('GET', "%s/user-api-key/new" % board, params=data).prepare()
+    url = (board + "/user-api-key/new?scopes=write&application_name=HelpMe&public_key=" + 
+           self.public_key.replace("'", "") + 
+           "&client_id=" + client_id +
+           "&nonce=" + nonce )
+
     bot.newline()
     bot.info('Open browser to:')
-    bot.info(prompt.url)
+    bot.info(url)
     bot.newline()
-   
+    
     # the user will open browser, get a token, and then have it saved here.
-    bot.info('Copy paste token:')
+    bot.info('Copy paste token, press Ctrl-D to save it:')
 
     lines = []
 
-    # The token is multi line, so collect until user presses enter (empty line)
+    # The message is multiple lines
     while True:
-        line = enter_input().strip()
+        try:
+            line = enter_input()
+        except EOFError:
+            break
         if line:
             lines.append(line)
-        else:
-            break
 
-    token = '\n'.join(lines)
-    return token
+    message = "\n".join(lines)
+
+    # Write to temporary file, we only need to get key
+    tmpfile = mktemp()
+    with open(tmpfile, 'w') as filey:
+        filey.write(message)
+
+    # Read in again, and get token **important** is binary
+    with open(tmpfile, 'rb') as filey:
+        message = filey.read()
+
+    # uses pycryptodome (3.7.2)
+    cipher = Cipher_PKCS1_v1_5.new(self.key)
+    decrypted = json.loads(cipher.decrypt(b64decode(message), None).decode())
+
+    # Validate nonce is in response
+    if "nonce" not in decrypted:
+        bot.exit('Missing nonce field in response for token, invalid.')
+
+    # Must return nonce that we sent
+    if decrypted['nonce'] != nonce:
+        bot.exit('Invalid nonce, exiting.')
+
+    return decrypted['key']
 
 
-def create_post(title, body, board, category, username, token):
+
+def create_post(self, title, body, board, category, username):
     '''create a Discourse post, given a title, body, board, and token.
 
        Parameters
@@ -74,7 +102,6 @@ def create_post(title, body, board, category, username, token):
        title: the issue title
        body: the issue body
        board: the discourse board to post to
-       token: the user's personal (or global) discourse token
 
     '''
 
@@ -95,23 +122,23 @@ def create_post(title, body, board, category, username, token):
 
     category_id = categories.get(category, None)
 
-    headers = {"Content-Type": "multipart/form-data;"}
+    headers = {"Content-Type": "application/json",
+               "User-Api-Client-Id": self.client_id,
+               "User-Api-Key": self.token }
+
 
     # First get the category ids
-    data = {'api_key': self.token, 
-            'api_username': username,
-            'title': title,
+    data = {'title': title,
             'raw': body,
             'category': category_id}
 
     response = requests.post("%s/posts.json" % board,
                              headers=headers,
-                             data=data)
-
+                             data=json.dumps(data))
 
     if response.status_code in [200, 201, 202]:
         topic = response.json()
-        url = "%s/t/%s/%s" %(board, topic['topic_slug'], topic['id'])
+        url = "%s/t/%s/%s" %(board, topic['topic_slug'], topic['topic_id'])
         bot.info(url)
         return url
 

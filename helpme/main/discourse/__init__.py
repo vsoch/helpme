@@ -36,16 +36,17 @@ class Helper(HelperBase):
  
         self.name = "discourse"
 
-        # Discourse needs a keypair, generate if not found
-        self.keypair = self._generate_keys()
+        # Discourse needs a keypair, generate if not found, before token
+        self._generate_keys()
         super(Helper, self).__init__(**kwargs)
 
     def load_secrets(self):
         self.token = self._get_and_update_setting('HELPME_DISCOURSE_TOKEN')
 
-        # Generate client id with application name and version
+        # Generate client id with application name and version, if not provided
         cid = 'helpme-%s' % self._version
-        self.client_id = self._get_and_update_setting('DISCOURSE_CLIENT_ID', cid)
+        env = 'HELPME_DISCOURSE_CLIENT_ID'
+        self.client_id = self._get_and_update_setting(env, cid)
 
         # Load additional parameters for board category and name
         self._update_envars()
@@ -73,7 +74,7 @@ class Helper(HelperBase):
         '''
         if value is None:
             bot.error('You must export %s to use Discourse' % envar)
-            print('https://vsoch.github.io/helpme/helper-github')
+            print('https://vsoch.github.io/helpme/helper-discourse')
             sys.exit(1)
 
 
@@ -85,21 +86,17 @@ class Helper(HelperBase):
         keypair_dir = os.path.join(os.path.dirname(HELPME_CLIENT_SECRETS),
                                    'discourse')
 
-        # We store the private and public keys separately
-        keypair_name = 'hmpgp'
-        key_public = os.path.join(keypair_dir, "%s.pub" % keypair_name)
-        key_private = os.path.join(keypair_dir, "%s.priv" % keypair_name)
+        # Have we generated a keypair file before?
+        self.keypair_file = os.path.join(keypair_dir, 'private.pem')
 
         # We likely won't have generated it on first use!
-        if not os.path.exists(key_public) or not os.path.exists(key_private):
+        if not os.path.exists(self.keypair_file):
             bot.info('Generating keypair...')
-            keys = generate_keypair(self.name, keypair_dir, keypair_name)           
-        else:
-            keys = load_keypair(self.name, keypair_dir, keypair_name)
+            self.key = generate_keypair(self.keypair_file)           
 
-        # Save to the client for later signing
-        self.keypub = keys['public']
-        self.keypriv = keys['private']
+        # If we generated the keypair file, we will have already loaded the key
+        if not hasattr(self, 'key'):
+            load_keypair(self.keypair_file)
 
 
     def _start(self, positionals):
@@ -142,7 +139,7 @@ class Helper(HelperBase):
 
         # Step 1: Token
         if self.token == None:
-            self.token = request_token(board, self.client_id)
+            self.token = self.request_token(board)
             self._get_and_update_setting('HELPME_DISCOURSE_TOKEN', self.token)
 
         # Step 1: Environment
@@ -168,5 +165,9 @@ class Helper(HelperBase):
 
         # Submit the issue
 
-        post = create_post(title, body, board, category, username, self.token)
+        post = self.create_post(title, body, board, category, username)
         return post
+
+
+Helper.request_token = request_token
+Helper.create_post = create_post

@@ -51,11 +51,10 @@ class HelperBase(object):
            kwargs: should include command line arguments from the client.
 
         '''
-
+        self._version = __version__
         self.config = self._load_config()
         self.config_user = self._load_config_user()
         self.load_secrets()
-        self._version = __version__
 
         # Data and variables collected from the user
         self.data = kwargs or dict()

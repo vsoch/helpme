@@ -82,16 +82,33 @@ def load_config(self):
     return _load_config(configfile)
 
 
-def remove_setting(self, section, name, save=False):
+def _remove_setting(section, name, configfile, save=False):
     '''remove a setting from the global config
     '''
     removed = False
-    configfile = get_configfile()
     config = _load_config(configfile)
     if section in config:
         if name.lower() in config[section]:
             removed = config.remove_option(section, name)
+
+    # Does the user want to save the file?
+    if removed and save:
+        write_config(configfile, config)
+
     return removed
+
+def remove_setting(self, section, name, save=False):
+    '''remove a setting from the global config
+    '''
+    configfile = get_configfile()
+    return _remove_setting(section, name, configfile, save)
+
+
+def remove_user_setting(self, section, name, save=False):
+    '''remove a setting from the user config
+    '''
+    configfile = get_configfile_user()
+    return _remove_setting(section, name, configfile, save)
 
 
 def _load_config(configfile, section=None):

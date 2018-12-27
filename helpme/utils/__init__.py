@@ -21,7 +21,8 @@ from .fileio import (
 )
 from .settings import (
     get_configfile,
-    generate_keypair
+    generate_keypair,
+    load_keypair
 )
 
 from .format import envars_to_markdown
