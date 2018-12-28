@@ -152,7 +152,7 @@ class Helper(HelperBase):
         asciinema = self.data.get('record_asciinema')
         if asciinema not in [None, '']:
             url = upload_asciinema(asciinema)
-               
+
             # If the upload is successful, add a link to it.
 
             if url is not None:

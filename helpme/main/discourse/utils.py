@@ -38,14 +38,14 @@ def request_token(self, board):
     nonce = str(uuid.uuid4())
 
     data = {'scopes': 'write',
-            'client_id': client_id,
+            'client_id': self.client_id,
             'application_name': 'HelpMe',
             'public_key': self.public_key.replace("'",""),
             'nonce': nonce }
 
     url = (board + "/user-api-key/new?scopes=write&application_name=HelpMe&public_key=" + 
            self.public_key.replace("'", "") + 
-           "&client_id=" + client_id +
+           "&client_id=" + self.client_id +
            "&nonce=" + nonce )
 
     bot.newline()

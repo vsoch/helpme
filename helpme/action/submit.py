@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from asciinema.commands.upload import UploadCommand
 import os
+import re
 
 def upload_asciinema(filename):
     '''a wrapper around generation of an asciinema.api.Api to call the 
@@ -48,6 +49,12 @@ def upload_asciinema(filename):
             url, warn = uploader.api.upload_asciicast(filename)
             if warn:
                 uploader.print_warning(warn)
+
+            # Extract just the url, if provided (always is https)
+            if url:
+                match = re.search('https://.+', url)
+                if match: 
+                    url = match.group() 
             return url
 
         except:
