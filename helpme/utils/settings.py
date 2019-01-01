@@ -55,7 +55,8 @@ def load_keypair(keypair_file):
 
 def generate_keypair(keypair_file):
     '''generate_keypair is used by some of the helpers that need a keypair.
-       We return the keyfile, and the key is saved to the client as self.key
+       The function should be used if the client doesn't have the attribute 
+       self.key. We generate the key and return it.
 
        We use pycryptodome (3.7.2)       
 

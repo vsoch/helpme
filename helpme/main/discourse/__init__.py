@@ -90,13 +90,12 @@ class Helper(HelperBase):
         self.keypair_file = os.path.join(keypair_dir, 'private.pem')
 
         # We likely won't have generated it on first use!
-        if not os.path.exists(self.keypair_file):
-            bot.info('Generating keypair...')
+        if not hasattr(self, 'key'):
             self.key = generate_keypair(self.keypair_file)           
 
         # If we generated the keypair file, we will have already loaded the key
-        if not hasattr(self, 'key'):
-            load_keypair(self.keypair_file)
+        if not hasattr(self, 'public_key'):
+            self.public_key = load_keypair(self.keypair_file)
 
 
     def _start(self, positionals):
