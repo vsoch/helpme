@@ -35,7 +35,7 @@ def main(args, extras):
 
         # Get the helper, do the recording, submit
 
-        helper = get_helper(name)
+        helper = get_helper(name=name)
 
         if args.asciinema is not None:
             if os.path.exists(args.asciinema):

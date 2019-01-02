@@ -1,6 +1,6 @@
 '''
 
-Copyright (C) 2018 Vanessa Sochat.
+Copyright (C) 2018-2019 Vanessa Sochat.
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU Affero General Public License as published by
@@ -24,6 +24,6 @@ import os
 
 
 def main(args, extra):
-    from helpme.main import Helper
+    from helpme.main import get_helper
     
     print('This will configure a client for the user')
