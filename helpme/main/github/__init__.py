@@ -1,6 +1,6 @@
 '''
 
-Copyright (C) 2017-2018 Vanessa Sochat.
+Copyright (C) 2017-2019 Vanessa Sochat.
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU Affero General Public License as published by
@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from helpme.main import HelperBase
 from helpme.action import ( record_asciinema, upload_asciinema )
 from helpme.logger import ( bot )
+from helpme.utils import envars_to_markdown
 from .utils import create_issue
 import os
 import sys
@@ -78,10 +79,7 @@ class Helper(HelperBase):
         # Step 1: Environment
 
         envars = self.data.get('record_environment')
-        if envars not in [None, '', []]:
-            body += '\n## Environment\n'
-            for envar in envars:
-                body += ' - **%s**: %s\n' %(envar[0], envar[1])
+        body = body + envars_to_markdown(envars)
 
         # Step 2: Asciinema
 

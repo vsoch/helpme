@@ -17,13 +17,32 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 '''
 
+
 from helpme.logger import bot
-import sys
-import pwd
 import os
+import sys
+import re
 
 
-def main(args, extra):
-    from helpme.main import get_helper
-    
-    print('This will configure a client for the user')
+# Markdown formatting
+
+def envars_to_markdown(envars, title = "Environment"):
+    '''generate a markdown list of a list of environment variable tuples
+
+       Parameters
+       ==========
+       title: A title for the section (defaults to "Environment"
+       envars: a list of tuples for the environment, e.g.:
+
+            [('TERM', 'xterm-256color'),
+             ('SHELL', '/bin/bash'),
+             ('USER', 'vanessa'),
+             ('LD_LIBRARY_PATH', ':/usr/local/pulse')]
+
+    '''
+    markdown = ''
+    if envars not in [None, '', []]:
+        markdown += '\n## %s\n' % title
+        for envar in envars:
+            markdown += ' - **%s**: %s\n' %(envar[0], envar[1])
+    return markdown

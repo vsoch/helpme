@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 from helpme.logger import ( bot, RobotNamer )
 from helpme.utils import ( confirm_prompt, regexp_prompt )
 from helpme.action import record_asciinema
+from helpme.version import __version__
 
 from configparser import NoOptionError
 
@@ -29,6 +30,7 @@ from .settings import (
     get_and_update_setting,
     load_config,
     load_config_user,
+    load_envars,
     remove_setting,
     update_settings
 )
@@ -49,7 +51,7 @@ class HelperBase(object):
            kwargs: should include command line arguments from the client.
 
         '''
-
+        self._version = __version__
         self.config = self._load_config()
         self.config_user = self._load_config_user()
         self.load_secrets()
@@ -110,7 +112,7 @@ class HelperBase(object):
         self.speak()
         self._start(positionals)
 
-    def _start(self, postitions=None):
+    def _start(self, positionals=None):
         '''_start should be implemented by the subclass, and print any extra
            information for the helper to the user
         '''
@@ -282,6 +284,7 @@ class HelperBase(object):
 # Settings
 HelperBase._load_config = load_config
 HelperBase._load_config_user = load_config_user
+HelperBase._load_envars = load_envars
 HelperBase._remove_setting = remove_setting
 HelperBase._get_setting = get_setting
 HelperBase._get_settings = get_settings

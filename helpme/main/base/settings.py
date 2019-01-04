@@ -48,7 +48,13 @@ def get_configfile_user():
     # The inital file has a funny username
 
     if not os.path.exists(HELPME_CLIENT_SECRETS):
-        bot.debug('Generating settings file at %s' %HELPME_CLIENT_SECRETS)
+        bot.debug('Generating settings file at %s' % HELPME_CLIENT_SECRETS)
+        config_dir = os.path.dirname(HELPME_CLIENT_SECRETS)
+
+        # The configuration directory might be needed for different clients
+        if not os.path.exists(config_dir):
+            mkdir_p(config_dir)
+
         name = RobotNamer().generate()
 
         # Generate the user config
@@ -76,16 +82,33 @@ def load_config(self):
     return _load_config(configfile)
 
 
-def remove_setting(self, section, name, save=False):
+def _remove_setting(section, name, configfile, save=False):
     '''remove a setting from the global config
     '''
     removed = False
-    configfile = get_configfile()
     config = _load_config(configfile)
     if section in config:
         if name.lower() in config[section]:
             removed = config.remove_option(section, name)
+
+    # Does the user want to save the file?
+    if removed and save:
+        write_config(configfile, config)
+
     return removed
+
+def remove_setting(self, section, name, save=False):
+    '''remove a setting from the global config
+    '''
+    configfile = get_configfile()
+    return _remove_setting(section, name, configfile, save)
+
+
+def remove_user_setting(self, section, name, save=False):
+    '''remove a setting from the user config
+    '''
+    configfile = get_configfile_user()
+    return _remove_setting(section, name, configfile, save)
 
 
 def _load_config(configfile, section=None):
@@ -101,6 +124,30 @@ def _load_config(configfile, section=None):
             else:
                 bot.warning('%s not found in %s' %(section, configfile))
         return config
+
+
+# Environment ##################################################################
+
+
+def load_envars(self, items):
+    '''load a tuple of environment variables, to add to the user settings
+    
+        Example:
+ 
+        items = [('HELPME_DISCOURSE_BOARD', 'user_prompt_board'),
+                 ('HELPME_DISCOURSE_CATEGORY', 'user_prompt_category')]
+
+        # Note that it's added to the client with an underscore:
+        self._load_envars()
+    ''' 
+    for item in items:
+        envar = item[0]
+        key = item[1]
+        value = self._get_and_update_setting(envar)
+
+        if value != None:
+            self.data[key] = value
+            self.config.remove_option(self.name, key)
 
 
 # Get and Update ###############################################################

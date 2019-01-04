@@ -1,9 +1,6 @@
 '''
 
-
-Copyright (C) 2017-2018 Vanessa Sochat.
-Copyright (C) 2017-2018 The Board of Trustees of the Leland Stanford Junior
-University.
+Copyright (C) 2017-2019 Vanessa Sochat.
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU Affero General Public License as published by
@@ -41,6 +38,7 @@ def get_helper(name=None, quiet=True, **kwargs):
     # If no obvious credential provided, we can use HELPME_CLIENT
     if   HELPME_CLIENT == 'github': from .github import Helper;
     elif HELPME_CLIENT == 'uservoice': from .uservoice import Helper
+    elif HELPME_CLIENT == 'discourse': from .discourse import Helper
     else: from .github import Helper
 
     Helper.name = HELPME_CLIENT
@@ -48,5 +46,3 @@ def get_helper(name=None, quiet=True, **kwargs):
 
     # Initialize the database
     return Helper()
-
-Helper = get_helper()

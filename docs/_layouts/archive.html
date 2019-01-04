@@ -1,7 +1,28 @@
 ---
 layout: default
 ---
-{% assign posts = page.posts | sort: "title" %}
-<h2 style="text-transform:capitalize;">{{ page.title | replace: "-", " " }} <span class="count">({{ posts | size }})</span></h2>
 
-{% include listings.html listings=posts %}
+{% for collection in site.sets %}
+<section>
+    <hr>
+    <h3><img style="margin-top:10px; float:left; width:50px" src="{{ site.baseurl }}/assets/img/logo-book.png">
+<span style="line-height:50px; padding-left:10px">{{ collection.title }}</span></h3>
+
+    {% assign posts = site.posts | sort: "title" %}
+        <ul style="list-style-type:none">
+	{% for item in posts %}
+                {% if item.set == collection.slug %}
+		<li {% if item.url == page.url %}class="active"{% endif %}>
+			<a style="text-decoration:none" href="{{ site.baseurl }}{{ item.url }}">
+				<article>
+                                    <div style="padding-left:50px">
+                                        <h4>{{ item.title }}</h4>
+                                        <p class="description">{{ item.description }}</h4>
+                                    </div>
+				</article>
+			</a>
+		</li>
+                {% endif %}{% endfor %}
+       </ul>
+</section>
+{% endfor %}
