@@ -27,7 +27,6 @@ from helpme.utils import (
 from helpme.logger import bot
 from .utils import( create_post, request_token )
 import os
-import pgpy
 import sys
 
 class Helper(HelperBase):
