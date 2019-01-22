@@ -14,8 +14,7 @@ RUN /opt/conda/bin/conda install -y gxx_linux-64
 RUN /opt/conda/bin/pip install setuptools && \
     /opt/conda/bin/pip install pip --upgrade && \
     /opt/conda/bin/pip install -r /code/requirements.txt && \
-    cd /code && /opt/conda/bin/python setup.py install && \
-    /opt/conda/bin/pip install .[all]
+    cd /code /opt/conda/bin/pip install .[all]
 
 ENTRYPOINT ["helpme"]
 

@@ -68,6 +68,11 @@ def generate_keypair(keypair_file):
     from Crypto.PublicKey import RSA
     key = RSA.generate(2048)
 
+    # Ensure helper directory exists
+    keypair_dir = os.path.dirname(keypair_file)
+    if not os.path.exists(keypair_dir):
+        os.makedirs(keypair_dir)
+
     # Save key
     with open(keypair_file, 'wb') as filey:
         filey.write(key.exportKey('PEM'))
