@@ -3,6 +3,7 @@ FROM continuumio/miniconda3
 # docker build -t vanessa/helpme .
 
 LABEL maintainer vsochat@stanford.edu
+ENV SHELL /bin/bash
 RUN apt-get update && apt-get install -y gcc \
                                         build-essential \ 
                                         libssl-dev \
