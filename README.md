@@ -2,6 +2,8 @@
 
 A command line helper when you need it.
 
+<a target="_blank" rel="noopener noreferrer" href="/vsoch/helpme/blob/master/docs/assets/img/helpme.png"><img src="/vsoch/helpme/raw/master/docs/assets/img/helpme.png" alt="docs/assets/img/helpme.png" style="max-width:2%;float:right"></a>
+
  - [Overview](#overview)
  - [Background](#background)
  - [Installation](#installation)
@@ -9,8 +11,6 @@ A command line helper when you need it.
  - [Contributing](#contributing)
 
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00775/status.svg)](https://doi.org/10.21105/joss.00775)
-
-![docs/assets/img/helpme.png](docs/assets/img/helpme.png)
 
 
 # Overview
