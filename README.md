@@ -2,7 +2,16 @@
 
 A command line helper when you need it.
 
+ - [Overview](#overview)
+ - [Background](#background)
+ - [Installation](#installation)
+ - [Usage](#usage)
+ - [Contributing](#contributing)
+
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00775/status.svg)](https://doi.org/10.21105/joss.00775)
+
+![assets/img/helpme.png](assets/img/helpme.png)
+
 
 # Overview
 
@@ -65,7 +74,7 @@ $ helpme uservoice
 
 This is a very brief summary of usage. For complete details, see our [documentation](https://vsoch.github.io/helpme).
 
-## Contributing
+# Contributing
 
 If you'd like to contribute, we welcome pull requests, feature requests, and any form of help you
 might offer! Please see our [contributing guidelines](.github/CONTRIBUTING.md) for more details. Do you
