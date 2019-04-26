@@ -2,8 +2,7 @@
 
 A command line helper when you need it.
 
-<a target="_blank" rel="noopener noreferrer" href="https://raw.githubusercontent.com/vsoch/helpme/master/docs/assets/img/helpme.png">
-<img src="https://raw.githubusercontent.com/vsoch/helpme/master/docs/assets/img/helpme.png" alt="docs/assets/img/helpme.png" style="max-width:2%;float:right"></a>
+<img align="right" height="100" src="https://raw.githubusercontent.com/vsoch/helpme/master/docs/assets/img/helpme.png">
 
  - [Overview](#overview)
  - [Background](#background)
