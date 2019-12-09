@@ -1,6 +1,6 @@
-'''
+"""
 
-Copyright (C) 2017-2019 Vanessa Sochat.
+Copyright (C) 2017-2020 Vanessa Sochat.
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU Affero General Public License as published by
@@ -15,7 +15,7 @@ License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-'''
+"""
 
 from helpme.logger import bot
 import sys
@@ -24,7 +24,7 @@ import json
 
 
 def create_issue(title, body, repo, token):
-    '''create a Github issue, given a title, body, repo, and token.
+    """create a Github issue, given a title, body, repo, and token.
 
        Parameters
        ==========
@@ -33,27 +33,29 @@ def create_issue(title, body, repo, token):
        repo: the full name of the repo
        token: the user's personal Github token
 
-    '''
-    owner, name = repo.split('/')
-    url = 'https://api.github.com/repos/%s/%s/issues' % (owner, name)
-    
-    data = {'title': title, 'body': body }
+    """
+    owner, name = repo.split("/")
+    url = "https://api.github.com/repos/%s/%s/issues" % (owner, name)
 
-    headers = { "Authorization": "token %s" % token,
-                "Accept": "application/vnd.github.symmetra-preview+json" }
+    data = {"title": title, "body": body}
+
+    headers = {
+        "Authorization": "token %s" % token,
+        "Accept": "application/vnd.github.symmetra-preview+json",
+    }
 
     response = requests.post(url, data=json.dumps(data), headers=headers)
 
     if response.status_code in [201, 202]:
-        url = response.json()['html_url']
+        url = response.json()["html_url"]
         bot.info(url)
         return url
 
     elif response.status_code == 404:
-        bot.error('Cannot create issue. Does your token have scope repo?')
+        bot.error("Cannot create issue. Does your token have scope repo?")
         sys.exit(1)
 
     else:
-        bot.error('Cannot create issue %s' %title)
+        bot.error("Cannot create issue %s" % title)
         bot.error(response.content)
         sys.exit(1)

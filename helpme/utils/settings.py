@@ -1,6 +1,6 @@
-'''
+"""
 
-Copyright (C) 2017-2018 Vanessa Sochat.
+Copyright (C) 2017-2020 Vanessa Sochat.
 
 This program is free software: you can redistribute it and/or modify it
 under the terms of the GNU Affero General Public License as published by
@@ -15,13 +15,9 @@ License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-'''
+"""
 
-from helpme.utils import ( 
-    get_installdir, 
-    mkdir_p, 
-    read_file 
-)
+from helpme.utils import get_installdir, mkdir_p, read_file
 import configparser
 import getpass
 import os
@@ -31,30 +27,32 @@ try:
 except:
     from urlparse import quote_plus
 
+
 def get_configfile():
-    '''return the full path to the configuration file
-    '''
-    return os.path.abspath(os.path.join(get_installdir(), 'helpme.cfg'))
+    """return the full path to the configuration file
+    """
+    return os.path.abspath(os.path.join(get_installdir(), "helpme.cfg"))
+
 
 def load_keypair(keypair_file):
-    '''load a keypair from a keypair file. We add attributes key (the raw key)
+    """load a keypair from a keypair file. We add attributes key (the raw key)
        and public_key (the url prepared public key) to the client.
 
        Parameters
        ==========
        keypair_file: the pem file to load.
-    '''
+    """
     from Crypto.PublicKey import RSA
 
     # Load key
-    with open(keypair_file, 'rb') as filey:
+    with open(keypair_file, "rb") as filey:
         key = RSA.import_key(filey.read())
 
-    return quote_plus(key.publickey().exportKey().decode('utf-8'))
-    
+    return quote_plus(key.publickey().exportKey().decode("utf-8"))
+
 
 def generate_keypair(keypair_file):
-    '''generate_keypair is used by some of the helpers that need a keypair.
+    """generate_keypair is used by some of the helpers that need a keypair.
        The function should be used if the client doesn't have the attribute 
        self.key. We generate the key and return it.
 
@@ -63,9 +61,10 @@ def generate_keypair(keypair_file):
        Parameters
        =========
        keypair_file: fullpath to where to save keypair
-    '''
+    """
 
     from Crypto.PublicKey import RSA
+
     key = RSA.generate(2048)
 
     # Ensure helper directory exists
@@ -74,7 +73,7 @@ def generate_keypair(keypair_file):
         os.makedirs(keypair_dir)
 
     # Save key
-    with open(keypair_file, 'wb') as filey:
-        filey.write(key.exportKey('PEM'))
+    with open(keypair_file, "wb") as filey:
+        filey.write(key.exportKey("PEM"))
 
     return key
