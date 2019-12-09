@@ -12,7 +12,7 @@ A command line helper when you need it.
  - [Contributing](#contributing)
 
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00775/status.svg)](https://doi.org/10.21105/joss.00775)
-
+[![GitHub actions status](https://github.com/vsoch/helpme/workflows/helpme-ci/badge.svg?branch=master)](https://github.com/vsoch/helpme/actions?query=branch%3Amaster+workflow%3Ahelpme-ci)
 
 # Overview
 
