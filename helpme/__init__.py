@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (C) 2017-2018 Vanessa Sochat.
 
@@ -15,6 +15,6 @@ License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-'''
+"""
 
 from helpme.version import __version__

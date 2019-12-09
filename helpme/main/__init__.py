@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (C) 2017-2019 Vanessa Sochat.
 
@@ -15,19 +15,19 @@ License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-'''
+"""
 
 from .base import HelperBase
 
 
 def get_helper(name=None, quiet=True, **kwargs):
-    '''
+    """
        get the correct helper depending on the environment variable
        HELPME_CLIENT
 
        quiet: if True, suppress most output about the client (e.g. speak)
 
-    '''
+    """
     # Second priority, from environment
     from helpme.defaults import HELPME_CLIENT
 
@@ -36,10 +36,14 @@ def get_helper(name=None, quiet=True, **kwargs):
         HELPME_CLIENT = name
 
     # If no obvious credential provided, we can use HELPME_CLIENT
-    if   HELPME_CLIENT == 'github': from .github import Helper;
-    elif HELPME_CLIENT == 'uservoice': from .uservoice import Helper
-    elif HELPME_CLIENT == 'discourse': from .discourse import Helper
-    else: from .github import Helper
+    if HELPME_CLIENT == "github":
+        from .github import Helper
+    elif HELPME_CLIENT == "uservoice":
+        from .uservoice import Helper
+    elif HELPME_CLIENT == "discourse":
+        from .discourse import Helper
+    else:
+        from .github import Helper
 
     Helper.name = HELPME_CLIENT
     Helper.quiet = quiet

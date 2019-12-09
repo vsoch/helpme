@@ -4,7 +4,7 @@ from .terminal import (
     regexp_prompt,
     run_command,
     get_installdir,
-    which
+    which,
 )
 from .fileio import (
     copyfile,
@@ -17,12 +17,8 @@ from .fileio import (
     read_config,
     write_config,
     write_file,
-    write_json
+    write_json,
 )
-from .settings import (
-    get_configfile,
-    generate_keypair,
-    load_keypair
-)
+from .settings import get_configfile, generate_keypair, load_keypair
 
 from .format import envars_to_markdown

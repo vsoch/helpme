@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (C) 2018-2019 Vanessa Sochat.
 
@@ -15,7 +15,7 @@ License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-'''
+"""
 
 
 from helpme.logger import bot
@@ -26,8 +26,9 @@ import re
 
 # Markdown formatting
 
-def envars_to_markdown(envars, title = "Environment"):
-    '''generate a markdown list of a list of environment variable tuples
+
+def envars_to_markdown(envars, title="Environment"):
+    """generate a markdown list of a list of environment variable tuples
 
        Parameters
        ==========
@@ -39,10 +40,10 @@ def envars_to_markdown(envars, title = "Environment"):
              ('USER', 'vanessa'),
              ('LD_LIBRARY_PATH', ':/usr/local/pulse')]
 
-    '''
-    markdown = ''
-    if envars not in [None, '', []]:
-        markdown += '\n## %s\n' % title
+    """
+    markdown = ""
+    if envars not in [None, "", []]:
+        markdown += "\n## %s\n" % title
         for envar in envars:
-            markdown += ' - **%s**: %s\n' %(envar[0], envar[1])
+            markdown += " - **%s**: %s\n" % (envar[0], envar[1])
     return markdown

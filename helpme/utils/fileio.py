@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (C) 2018-2019 Vanessa Sochat.
 
@@ -15,7 +15,7 @@ License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-'''
+"""
 
 import configparser
 import errno
@@ -31,16 +31,17 @@ from helpme.logger import bot
 
 # FOLDER OPERATIONS ############################################################
 
+
 def get_userhome():
-    '''get the user home based on the effective uid
-    '''
+    """get the user home based on the effective uid
+    """
     return pwd.getpwuid(os.getuid())[5]
 
 
 def mkdir_p(path):
-    '''mkdir_p attempts to get the same functionality as mkdir -p
+    """mkdir_p attempts to get the same functionality as mkdir -p
     :param path: the path to create.
-    '''
+    """
     try:
         os.makedirs(path)
     except OSError as e:
@@ -50,19 +51,21 @@ def mkdir_p(path):
             bot.error("Error creating path %s, exiting." % path)
             sys.exit(1)
 
+
 # CONFIG OPERATIONS ############################################################
 
+
 def write_config(filename, config, mode="w"):
-    '''use configparser to write a config object to filename
-    '''
+    """use configparser to write a config object to filename
+    """
     with open(filename, mode) as filey:
         config.write(filey)
     return filename
 
 
 def read_config(filename):
-    '''use configparser to write a config object to filename
-    '''
+    """use configparser to write a config object to filename
+    """
     config = configparser.ConfigParser()
     config.read(filename)
     return config
@@ -70,8 +73,9 @@ def read_config(filename):
 
 # FILE OPERATIONS ##############################################################
 
-def generate_temporary_file(folder='/tmp', prefix='helpme', ext='json'):
-    '''write a temporary file, in base directory with a particular extension.
+
+def generate_temporary_file(folder="/tmp", prefix="helpme", ext="json"):
+    """write a temporary file, in base directory with a particular extension.
       
        Parameters
        ==========
@@ -79,14 +83,14 @@ def generate_temporary_file(folder='/tmp', prefix='helpme', ext='json'):
        prefix: the prefix to use
        ext: the extension to use.
 
-    '''        
+    """
     tmp = next(tempfile._get_candidate_names())
-    return '%s/%s.%s.%s' %(folder, prefix, tmp, ext)
+    return "%s/%s.%s.%s" % (folder, prefix, tmp, ext)
 
 
 def copyfile(source, destination, force=True):
-    '''copy a file from a source to its destination.
-    '''
+    """copy a file from a source to its destination.
+    """
     if os.path.exists(destination) and force is True:
         os.remove(destination)
     shutil.copyfile(source, destination)
@@ -94,20 +98,20 @@ def copyfile(source, destination, force=True):
 
 
 def write_file(filename, content, mode="w"):
-    '''write_file will open a file, "filename" and write content, "content"
+    """write_file will open a file, "filename" and write content, "content"
     and properly close the file
-    '''
+    """
     with open(filename, mode) as filey:
         filey.writelines(content)
     return filename
 
 
 def write_json(json_obj, filename, mode="w", print_pretty=True):
-    '''write_json will (optionally,pretty print) a json object to file
+    """write_json will (optionally,pretty print) a json object to file
     :param json_obj: the dict to print to json
     :param filename: the output file to write to
     :param pretty_print: if True, will use nicer formatting
-    '''
+    """
     with open(filename, mode) as filey:
         if print_pretty:
             filey.writelines(print_json(json_obj))
@@ -117,20 +121,15 @@ def write_json(json_obj, filename, mode="w", print_pretty=True):
 
 
 def print_json(json_obj):
-    ''' just dump the json in a "pretty print" format
-    '''
-    return json.dumps(
-                    json_obj,
-                    indent=4,
-                    separators=(
-                        ',',
-                        ': '))
+    """ just dump the json in a "pretty print" format
+    """
+    return json.dumps(json_obj, indent=4, separators=(",", ": "))
 
 
 def read_file(filename, mode="r", readlines=True):
-    '''write_file will open a file, "filename" and write content, "content"
+    """write_file will open a file, "filename" and write content, "content"
     and properly close the file
-    '''
+    """
     with open(filename, mode) as filey:
         if readlines is True:
             content = filey.readlines()
@@ -139,11 +138,10 @@ def read_file(filename, mode="r", readlines=True):
     return content
 
 
-def read_json(filename, mode='r'):
-    '''read_json reads in a json file and returns
+def read_json(filename, mode="r"):
+    """read_json reads in a json file and returns
     the data structure as dict.
-    '''
+    """
     with open(filename, mode) as filey:
         data = json.load(filey)
     return data
-

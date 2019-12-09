@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (C) 2018-2019 Vanessa Sochat.
 
@@ -15,14 +15,15 @@ License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-'''
+"""
 
 from asciinema.commands.upload import UploadCommand
 import os
 import re
 
+
 def upload_asciinema(filename):
-    '''a wrapper around generation of an asciinema.api.Api to call the 
+    """a wrapper around generation of an asciinema.api.Api to call the 
        upload command given an already existing asciinema file. 
 
        Parameters
@@ -30,7 +31,7 @@ def upload_asciinema(filename):
        filename: the asciinema file to upload, can be generated with 
                  function record_asciinema in record.py
 
-    '''
+    """
     if os.path.exists(filename):
 
         import asciinema.config as aconfig
@@ -44,7 +45,7 @@ def upload_asciinema(filename):
         # Perform the upload, return the url
 
         uploader = UploadCommand(api, filename)
-    
+
         try:
             url, warn = uploader.api.upload_asciicast(filename)
             if warn:
@@ -52,13 +53,13 @@ def upload_asciinema(filename):
 
             # Extract just the url, if provided (always is https)
             if url:
-                match = re.search('https://.+', url)
-                if match: 
-                    url = match.group() 
+                match = re.search("https://.+", url)
+                if match:
+                    url = match.group()
             return url
 
         except:
-            bot.error('Problem with upload, skipping')
+            bot.error("Problem with upload, skipping")
 
     else:
-        bot.warning('Cannot find %s, skipping submission.' %filename)
+        bot.warning("Cannot find %s, skipping submission." % filename)

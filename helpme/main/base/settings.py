@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (C) 2017-2018 Vanessa Sochat.
 
@@ -15,15 +15,10 @@ License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-'''
+"""
 
-from helpme.logger import ( RobotNamer, bot )
-from helpme.utils import (
-    get_installdir,
-    mkdir_p,
-    read_config,
-    write_config
-)
+from helpme.logger import RobotNamer, bot
+from helpme.utils import get_installdir, mkdir_p, read_config, write_config
 import configparser
 import json
 import os
@@ -33,22 +28,23 @@ import sys
 
 # Config File (User and System) ################################################
 
+
 def get_configfile():
-    '''return the full path to the configuration file
-    '''
-    return os.path.abspath(os.path.join(get_installdir(), 'helpme.cfg'))
+    """return the full path to the configuration file
+    """
+    return os.path.abspath(os.path.join(get_installdir(), "helpme.cfg"))
 
 
 def get_configfile_user():
-    '''return the full path for the user configuration file. If doesn't
+    """return the full path for the user configuration file. If doesn't
        exist, create it for the user.
-    '''
+    """
     from helpme.defaults import HELPME_CLIENT_SECRETS
 
     # The inital file has a funny username
 
     if not os.path.exists(HELPME_CLIENT_SECRETS):
-        bot.debug('Generating settings file at %s' % HELPME_CLIENT_SECRETS)
+        bot.debug("Generating settings file at %s" % HELPME_CLIENT_SECRETS)
         config_dir = os.path.dirname(HELPME_CLIENT_SECRETS)
 
         # The configuration directory might be needed for different clients
@@ -60,31 +56,31 @@ def get_configfile_user():
         # Generate the user config
 
         config = configparser.ConfigParser()
-        config['DEFAULT'] = {'Alias': name }
+        config["DEFAULT"] = {"Alias": name}
         write_config(HELPME_CLIENT_SECRETS, config)
 
     return HELPME_CLIENT_SECRETS
 
 
 def load_config_user(self):
-    '''Get and load the file. This function is the primary point of interaction
+    """Get and load the file. This function is the primary point of interaction
        between the get_configfile_user and various get/set settings functions.
-    '''
+    """
     configfile = get_configfile_user()
     return _load_config(configfile)
-       
+
 
 def load_config(self):
-    '''load config should load the global helpme configuration, and update
+    """load config should load the global helpme configuration, and update
        with user configurations from $HOME/helpme.cfg
-    '''
+    """
     configfile = get_configfile()
     return _load_config(configfile)
 
 
 def _remove_setting(section, name, configfile, save=False):
-    '''remove a setting from the global config
-    '''
+    """remove a setting from the global config
+    """
     removed = False
     config = _load_config(configfile)
     if section in config:
@@ -97,32 +93,33 @@ def _remove_setting(section, name, configfile, save=False):
 
     return removed
 
+
 def remove_setting(self, section, name, save=False):
-    '''remove a setting from the global config
-    '''
+    """remove a setting from the global config
+    """
     configfile = get_configfile()
     return _remove_setting(section, name, configfile, save)
 
 
 def remove_user_setting(self, section, name, save=False):
-    '''remove a setting from the user config
-    '''
+    """remove a setting from the user config
+    """
     configfile = get_configfile_user()
     return _remove_setting(section, name, configfile, save)
 
 
 def _load_config(configfile, section=None):
-    '''general function to load and return a configuration given a helper
+    """general function to load and return a configuration given a helper
        name. This function is used for both the user config and global help me
        config files.
-    '''
+    """
     if os.path.exists(configfile):
         config = read_config(configfile)
         if section is not None:
             if section in config:
                 return config._sections[section]
             else:
-                bot.warning('%s not found in %s' %(section, configfile))
+                bot.warning("%s not found in %s" % (section, configfile))
         return config
 
 
@@ -130,7 +127,7 @@ def _load_config(configfile, section=None):
 
 
 def load_envars(self, items):
-    '''load a tuple of environment variables, to add to the user settings
+    """load a tuple of environment variables, to add to the user settings
     
         Example:
  
@@ -139,7 +136,7 @@ def load_envars(self, items):
 
         # Note that it's added to the client with an underscore:
         self._load_envars()
-    ''' 
+    """
     for item in items:
         envar = item[0]
         key = item[1]
@@ -152,8 +149,9 @@ def load_envars(self, items):
 
 # Get and Update ###############################################################
 
+
 def get_setting(self, name, section=None, default=None, user=True):
-    '''return a setting from the environment (first priority) and then
+    """return a setting from the environment (first priority) and then
        secrets (second priority) if one can be found. If not, return None.
 
        Parameters
@@ -163,7 +161,7 @@ def get_setting(self, name, section=None, default=None, user=True):
        default: (optional) if not found, return default instead.
        user: if True, load from user config. Otherwise, main config
 
-    ''' 
+    """
     loader = self._load_config_user
     if not user:
         loader = self._load_config
@@ -193,17 +191,16 @@ def get_setting(self, name, section=None, default=None, user=True):
     return setting
 
 
-
 def get_settings(self):
-    '''get all settings for a client, if defined in config.
-    '''
+    """get all settings for a client, if defined in config.
+    """
     config = self._load_config_user()
     if self.name in config:
-        return config[self.name]           
+        return config[self.name]
 
 
 def update_settings(self, updates, config=None):
-    '''update client secrets will update the data structure for a particular
+    """update client secrets will update the data structure for a particular
        authentication. This should only be used for a (quasi permanent) token
        or similar. The secrets file, if found, is updated and saved by default.
 
@@ -213,7 +210,7 @@ def update_settings(self, updates, config=None):
        updates: a dictionary of key:value pairs to add to the config
        config: a configparser.ConfigParser(), if already loaded
 
-    '''
+    """
     if config is None:
         config = self._load_config_user()
 
@@ -230,7 +227,7 @@ def update_settings(self, updates, config=None):
 
 
 def get_and_update_setting(self, name, default=None, user=True):
-    '''Look for a setting in the environment (first priority) and then
+    """Look for a setting in the environment (first priority) and then
        the settings file (second). If something is found, the settings
        file is updated. The order of operations works as follows:
 
@@ -243,7 +240,7 @@ def get_and_update_setting(self, name, default=None, user=True):
 
        So the user of the function can assume a return of None equates to
        not set anywhere, and take the appropriate action.
-    ''' 
+    """
 
     setting = self._get_setting(name, user=user)
 
@@ -252,7 +249,7 @@ def get_and_update_setting(self, name, default=None, user=True):
 
     # If the setting is found, update the client secrets
     if setting is not None:
-        updates = {name : setting}
+        updates = {name: setting}
         self._update_settings(updates)
 
     return setting

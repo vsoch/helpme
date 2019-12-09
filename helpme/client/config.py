@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (C) 2018-2019 Vanessa Sochat.
 
@@ -15,7 +15,7 @@ License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-'''
+"""
 
 from helpme.logger import bot
 import sys
@@ -25,5 +25,5 @@ import os
 
 def main(args, extra):
     from helpme.main import get_helper
-    
-    print('This will configure a client for the user')
+
+    print("This will configure a client for the user")

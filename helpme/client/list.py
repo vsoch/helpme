@@ -1,4 +1,4 @@
-'''
+"""
 
 Copyright (C) 2018-2019 Vanessa Sochat.
 
@@ -15,7 +15,7 @@ License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-'''
+"""
 
 from helpme.logger import bot
 from helpme.defaults import HELPME_HELPERS
@@ -25,9 +25,8 @@ import os
 
 
 def main(args, extra):
-    '''print the listing of helpers installed, defined by the HELPME_HELPERS
+    """print the listing of helpers installed, defined by the HELPME_HELPERS
        variable in the default settings flie, and then exit.
-    '''    
-    bot.info('Helpers Installed:')
-    print('\n'.join(HELPME_HELPERS))
-    
+    """
+    bot.info("Helpers Installed:")
+    print("\n".join(HELPME_HELPERS))
