@@ -37,8 +37,12 @@ class Helper(HelperBase):
         self.token = self._get_and_update_setting("HELPME_GITHUB_TOKEN")
 
         # If the user wants to use a token for the GitHub API
-        if not self.data["require_token"]:
-            self.check_env("HELPME_GITHUB_TOKEN", self.token)
+        if not self.token:
+            bot.warning(
+                "HELPME_GITHUB_TOKEN not found, "
+                "will attempt to open browser manually "
+                "If you have trouble submitting an issue, export it."
+            )
 
     def check_env(self, envar, value):
         """ensure that variable envar is set to some value, 
@@ -105,7 +109,6 @@ class Helper(HelperBase):
         body = self.data["user_prompt_issue"]
         title = self.data["user_prompt_title"]
         repo = self.data["user_prompt_repo"]
-        use_token = self.data.get("require_token", True)
 
         # Step 1: Environment
 
@@ -130,7 +133,7 @@ class Helper(HelperBase):
 
         # Submit the issue
 
-        if use_token:
+        if self.use_token:
             issue = create_issue(title, body, repo, self.token)
         else:
             issue = open_issue(title, body, repo)

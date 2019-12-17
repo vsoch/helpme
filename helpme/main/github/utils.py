@@ -21,6 +21,8 @@ from helpme.logger import bot
 import sys
 import requests
 import json
+import urllib
+import webbrowser
 
 
 def create_issue(title, body, repo, token):
@@ -75,11 +77,12 @@ def open_issue(title, body, repo):
 
     # Title is best separated with +
     title = title.replace(" ", "+")
+    body = urllib.parse.quote(body)
     url = "https://github.com/%s/%s/issues/new?labels=bug&title=%s&body=%s" % (
         owner,
         name,
         title,
         body,
     )
-    bot.info("Open browser to:")
-    bot.info(url)
+    bot.info("Browser opening to:")
+    bot.info(webbrowser.open_new(url))

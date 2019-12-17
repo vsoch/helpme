@@ -149,7 +149,6 @@ class HelperBase(object):
                    runtime_arg_<name>
                    record_asciinema
                    record_environment
-                   record_pyenv
                    user_prompt_<name>
            content: the default value or boolean to indicate doing the step.
         """
@@ -170,10 +169,6 @@ class HelperBase(object):
         elif step == "record_environment":
             self.record_environment()
 
-        # Option 5: Record python environment
-        elif step == "record_pyenv":
-            self.record_pyenv()
-
         bot.debug(self.data)
 
     def collect_argument(self, step, message):
@@ -192,19 +187,12 @@ class HelperBase(object):
 
     # Recorders
 
-    def record_pyenv(self):
-        """Include sys.argv and other Python-derived variables.
-        """
-        data["args"] = sys.argv
-        self.data["record_pyenv"] = data
-
     def record_environment(self, headless=False):
         """collect a limited set of environment variables based on the list
            under record_envirionment in the configuration file.
         """
 
         # whitelist is a newline separated list under record_environment
-
         envars = self._get_setting(
             name="whitelist", section="record_environment", user=False
         )
@@ -212,15 +200,12 @@ class HelperBase(object):
         if envars is not None:
 
             # User uppercase
-
             envars = [x.upper() for x in envars.split("\n")]
 
             # Make transparent for the user
-
             bot.custom(prefix="Environment ", message="|".join(envars), color="CYAN")
 
             # Iterate through and collect based on name
-
             keep = [(k, v) for k, v in os.environ.items() if k.upper() in envars]
 
             # Ask the user for permission
@@ -240,7 +225,6 @@ class HelperBase(object):
         """
 
         # If the user already provided a file, we don't need to ask again
-
         if "record_asciinema" not in self.data:
 
             if confirm_prompt("Would you like to send a terminal recording?"):
