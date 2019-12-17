@@ -81,11 +81,8 @@ class HelperBase(object):
              _start) that is implemented by the helper class to do custom
              operations for the helper.             
         """
-        # Step 0: Each run session is given a fun name
+        # Step 1: Each run session is given a fun name
         self.run_id = RobotNamer().generate()
-
-        # Step 1: get config steps
-        steps = self.config._sections[self.name]
 
         # Step 2: Start the helper (announce and run start, which is init code)
         self.start(positionals)
@@ -93,7 +90,7 @@ class HelperBase(object):
         # Step 3: Iterate through flow, check each step for known record/prompt,
         #         and collect outputs appropriately
 
-        for step, content in steps.items():
+        for step, content in self.steps:
             self.collect(step, content)
 
         # Step 4: When data collected, pass data structures to submit
@@ -136,6 +133,14 @@ class HelperBase(object):
         sys.exit(1)
 
     # Collectors
+
+    @property
+    def steps(self):
+        """Yield steps to the calling client.
+        """
+        steps = self.config._sections[self.name]
+        for step, content in steps.items():
+            yield step, content
 
     def collect(self, step, content):
         """given a name of a configuration key and the provided content, collect

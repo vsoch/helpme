@@ -71,7 +71,6 @@ class Helper(HelperBase):
            body: additional content for the body of the request
         """
         self.run_id = RobotNamer().generate()
-        steps = self.config._sections[self.name]
         self.data["user_prompt_repo"] = repo
         self.config.remove_option("github", "user_prompt_repo")
 
@@ -81,9 +80,8 @@ class Helper(HelperBase):
 
         # We can only run steps that don't require user interaction
         skip = "^(%s)" % "|".join(["record_asciinema", "user_"])
-        for step in names:
-            if not re.search(skip, step) and step in steps:
-                content = steps[step]
+        for step, content in self.steps:
+            if not re.search(skip, step):
                 self.collect(step, content)
 
         self.submit()
@@ -133,7 +131,7 @@ class Helper(HelperBase):
 
         # Submit the issue
 
-        if self.use_token:
+        if self.token is not None:
             issue = create_issue(title, body, repo, self.token)
         else:
             issue = open_issue(title, body, repo)

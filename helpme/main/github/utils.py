@@ -85,4 +85,5 @@ def open_issue(title, body, repo):
         body,
     )
     bot.info("Browser opening to:")
-    bot.info(webbrowser.open_new(url))
+    bot.info(url)
+    webbrowser.open_new(url)
