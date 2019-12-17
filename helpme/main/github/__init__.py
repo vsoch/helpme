@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from helpme.main import HelperBase
 from helpme.action import record_asciinema, upload_asciinema
-from helpme.logger import bot
+from helpme.logger import bot, RobotNamer
 from helpme.utils import envars_to_markdown
 from .utils import create_issue, open_issue
 import os
