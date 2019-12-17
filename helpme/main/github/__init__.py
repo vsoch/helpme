@@ -21,8 +21,9 @@ from helpme.main import HelperBase
 from helpme.action import record_asciinema, upload_asciinema
 from helpme.logger import bot
 from helpme.utils import envars_to_markdown
-from .utils import create_issue
+from .utils import create_issue, open_issue
 import os
+import re
 import sys
 
 
@@ -34,7 +35,10 @@ class Helper(HelperBase):
 
     def load_secrets(self):
         self.token = self._get_and_update_setting("HELPME_GITHUB_TOKEN")
-        self.check_env("HELPME_GITHUB_TOKEN", self.token)
+
+        # If the user wants to use a token for the GitHub API
+        if not self.data["require_token"]:
+            self.check_env("HELPME_GITHUB_TOKEN", self.token)
 
     def check_env(self, envar, value):
         """ensure that variable envar is set to some value, 
@@ -50,10 +54,39 @@ class Helper(HelperBase):
             print("https://vsoch.github.io/helpme/helper-github")
             sys.exit(1)
 
+    def run_headless(self, repo, title, body):
+        """run a headless helper procedure, meaning that the title, body,
+           and other content must be provided to the function. Command line
+           arguments such a a GitHub repository or discourse board must 
+           also be provided.
+
+           Parameters
+           ==========
+           repo: the repository (full name) to submit to
+           title: the title of the issue to open
+           body: additional content for the body of the request
+        """
+        self.run_id = RobotNamer().generate()
+        steps = self.config._sections[self.name]
+        self.data["user_prompt_repo"] = repo
+        self.config.remove_option("github", "user_prompt_repo")
+
+        # Update config with other user provided variables
+        self.data["user_prompt_issue"] = body
+        self.data["user_prompt_title"] = title
+
+        # We can only run steps that don't require user interaction
+        skip = "^(%s)" % "|".join(["record_asciinema", "user_"])
+        for step in names:
+            if not re.search(skip, step) and step in steps:
+                content = steps[step]
+                self.collect(step, content)
+
+        self.submit()
+
     def _start(self, positionals):
-
-        # If the user provides a repository name, use it
-
+        """If the user provides a repository name, use it
+        """
         if positionals:
             self.data["user_prompt_repo"] = positionals[0]
             self.config.remove_option("github", "user_prompt_repo")
@@ -72,10 +105,11 @@ class Helper(HelperBase):
         body = self.data["user_prompt_issue"]
         title = self.data["user_prompt_title"]
         repo = self.data["user_prompt_repo"]
+        use_token = self.data.get("require_token", True)
 
         # Step 1: Environment
 
-        envars = self.data.get("record_environment")
+        envars = self.data.get("record_environment", [])
         body = body + envars_to_markdown(envars)
 
         # Step 2: Asciinema
@@ -96,5 +130,8 @@ class Helper(HelperBase):
 
         # Submit the issue
 
-        issue = create_issue(title, body, repo, self.token)
+        if use_token:
+            issue = create_issue(title, body, repo, self.token)
+        else:
+            issue = open_issue(title, body, repo)
         return issue

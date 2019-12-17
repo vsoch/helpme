@@ -99,6 +99,14 @@ class HelperBase(object):
         # Step 4: When data collected, pass data structures to submit
         self.submit()
 
+    def run_headless(self, positionals=None, **kwargs):
+        """run a headless helper procedure, meaning that the title, body,
+           and other content must be provided to the function. Command line
+           arguments such a a GitHub repository or discourse board would be
+           provided as positionals, and everything else is passed as kwargs.
+        """
+        bot.warning("run_headless must be implemented by the Helper class.")
+
     def start(self, positionals=None):
         """start the helper flow. We check helper system configurations to
            determine components that should be collected for the submission.
@@ -135,11 +143,13 @@ class HelperBase(object):
  
            Parameters
            ==========
+           headless: run the collection headless (no prompts)
            step: the key in the configuration. Can be one of:
                    user_message_<name>
                    runtime_arg_<name>
                    record_asciinema
                    record_environment
+                   record_pyenv
                    user_prompt_<name>
            content: the default value or boolean to indicate doing the step.
         """
@@ -160,6 +170,10 @@ class HelperBase(object):
         elif step == "record_environment":
             self.record_environment()
 
+        # Option 5: Record python environment
+        elif step == "record_pyenv":
+            self.record_pyenv()
+
         bot.debug(self.data)
 
     def collect_argument(self, step, message):
@@ -178,7 +192,13 @@ class HelperBase(object):
 
     # Recorders
 
-    def record_environment(self):
+    def record_pyenv(self):
+        """Include sys.argv and other Python-derived variables.
+        """
+        data["args"] = sys.argv
+        self.data["record_pyenv"] = data
+
+    def record_environment(self, headless=False):
         """collect a limited set of environment variables based on the list
            under record_envirionment in the configuration file.
         """
@@ -204,7 +224,6 @@ class HelperBase(object):
             keep = [(k, v) for k, v in os.environ.items() if k.upper() in envars]
 
             # Ask the user for permission
-
             if confirm_prompt("Is this list ok to share?"):
                 self.data["record_environment"] = keep
 
