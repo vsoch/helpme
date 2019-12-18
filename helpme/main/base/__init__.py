@@ -2,24 +2,14 @@
 
 Copyright (C) 2018-2020 Vanessa Sochat.
 
-This program is free software: you can redistribute it and/or modify it
-under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or (at your
-option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public
-License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed
+with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 """
 
 from helpme.logger import bot, RobotNamer
 from helpme.utils import confirm_prompt, regexp_prompt
-from helpme.action import record_asciinema
 from helpme.version import __version__
 
 from configparser import NoOptionError
@@ -252,6 +242,8 @@ class HelperBase(object):
             if confirm_prompt("Would you like to send a terminal recording?"):
 
                 try:
+                    from helpme.action.record import record_asciinema
+
                     record = self.config.getboolean(self.name, "record_asciinema")
                     filename = record_asciinema()
                     self.data["record_asciinema"] = filename
@@ -265,8 +257,13 @@ class HelperBase(object):
                     bot.custom(prefix="Asciinema ", message=message, color="CYAN")
 
                 except NoOptionError:
-
                     bot.warning("Cannot record asciinema, skipping.")
+
+                except:
+                    bot.exit(
+                        "The asciinema module is required to submit "
+                        "an asciinema recording. Try pip install helpme[asciinema]"
+                    )
 
     # identification
 
