@@ -31,13 +31,21 @@ class Helper(HelperBase):
     def __init__(self, **kwargs):
 
         self.name = "github"
+
+        # The client can require a GitHub token, if headless
+        self.require_token = kwargs.get("require_token", False)
         super(Helper, self).__init__(**kwargs)
 
     def load_secrets(self):
+        """load secrets, namely the GitHub token, check if required and
+           exit if not provided
+        """
         self.token = self._get_and_update_setting("HELPME_GITHUB_TOKEN")
 
         # If the user wants to use a token for the GitHub API
         if not self.token:
+            if self.require_token:
+                bot.exit("HELPME_GITHUB_TOKEN is required")
             bot.warning(
                 "HELPME_GITHUB_TOKEN not found, "
                 "will attempt to open browser manually "
@@ -58,7 +66,7 @@ class Helper(HelperBase):
             print("https://vsoch.github.io/helpme/helper-github")
             sys.exit(1)
 
-    def run_headless(self, repo, title, body, identifier=None):
+    def run_headless(self, repo, title=None, body="", identifier=None):
         """run a headless helper procedure, meaning that the title, body,
            and other content must be provided to the function. Command line
            arguments such a a GitHub repository or discourse board must 
@@ -77,6 +85,10 @@ class Helper(HelperBase):
 
         # Update config with other user provided variables
         self.data["user_prompt_issue"] = body
+
+        # If title is None, create for user
+        if title is None:
+            title = "[helpme] issue report"
         self.data["user_prompt_title"] = title
 
         # If the identifier is provided, add to data.

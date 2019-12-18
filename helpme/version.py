@@ -23,7 +23,7 @@ AUTHOR_EMAIL = "vsochat@stanford.edu"
 NAME = "helpme"
 PACKAGE_URL = "http://www.github.com/researchapps/helpme-client"
 KEYWORDS = "hpc, help, asciinema, questions, answers, client"
-DESCRIPTION = "command line client for helpme application."
+DESCRIPTION = "command line client for helping you out."
 LICENSE = "LICENSE"
 
 

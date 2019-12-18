@@ -53,6 +53,7 @@ class HelperBase(object):
         self._version = __version__
         self.config = self._load_config()
         self.config_user = self._load_config_user()
+        self.confirm = kwargs.get("confirm", True)
         self.load_secrets()
 
         # Data and variables collected from the user
@@ -227,7 +228,10 @@ class HelperBase(object):
             keep = [(k, v) for k, v in os.environ.items() if k.upper() in envars]
 
             # Ask the user for permission
-            if confirm_prompt("Is this list ok to share?"):
+            if self.confirm:
+                if confirm_prompt("Is this list ok to share?"):
+                    self.data["record_environment"] = keep
+            else:
                 self.data["record_environment"] = keep
 
     def record_asciinema(self):
