@@ -203,7 +203,7 @@ class HelperBase(object):
         from helpme.utils import MetricsCollector
 
         collector = MetricsCollector()
-        self.data["record_metrics"] = collector.metrics
+        self.data["record_system"] = collector.metrics
 
     def record_environment(self, headless=False):
         """collect a limited set of environment variables based on the list

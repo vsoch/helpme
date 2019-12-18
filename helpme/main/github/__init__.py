@@ -115,14 +115,15 @@ class Helper(HelperBase):
         title = self.data["user_prompt_title"]
         repo = self.data["user_prompt_repo"]
 
-        # Step 1: Environment and System
+        # Step 1: Environment and System Details
 
         envars = self.data.get("record_environment", [])
         system = self.data.get("record_system")
-        body = body + envars_to_markdown(envars)
 
+        details = "<details>\n\n%s" % envars_to_markdown(envars)
         if system is not None:
-            body = body + "## System\n %s" % format_code_block(system)
+            details = details + "\n## System\n %s" % format_code_block(system)
+        details += "</details>"
 
         # Step 2: Identifier
 
