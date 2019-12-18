@@ -122,8 +122,9 @@ class Helper(HelperBase):
 
         details = "<details>\n\n%s" % envars_to_markdown(envars)
         if system is not None:
-            details = details + "\n## System\n %s" % format_code_block(system)
+            details = details + "\n## System\n %s\n" % format_code_block(system)
         details += "</details>"
+        body = "%s\n%s" % (body, details)
 
         # Step 2: Identifier
 
