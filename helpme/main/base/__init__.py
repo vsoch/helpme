@@ -154,6 +154,7 @@ class HelperBase(object):
                    runtime_arg_<name>
                    record_asciinema
                    record_environment
+                   record_system
                    user_prompt_<name>
            content: the default value or boolean to indicate doing the step.
         """
@@ -174,6 +175,9 @@ class HelperBase(object):
         elif step == "record_environment":
             self.record_environment()
 
+        elif step == "record_system":
+            self.record_system()
+
         bot.debug(self.data)
 
     def collect_argument(self, step, message):
@@ -191,6 +195,15 @@ class HelperBase(object):
             self.data[step] = regexp_prompt(message)
 
     # Recorders
+
+    def record_system(self):
+        """collect a information about Python and the current system.
+           A dictionary of metrics is stored.
+        """
+        from helpme.utils import MetricsCollector
+
+        collector = MetricsCollector()
+        self.data["record_metrics"] = collector.metrics
 
     def record_environment(self, headless=False):
         """collect a limited set of environment variables based on the list

@@ -19,6 +19,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 from helpme.logger import bot
+
+import hashlib
 import os
 import sys
 import re
@@ -47,3 +49,23 @@ def envars_to_markdown(envars, title="Environment"):
         for envar in envars:
             markdown += " - **%s**: %s\n" % (envar[0], envar[1])
     return markdown
+
+
+def format_code_block(code, language="python"):
+    """format a chunk of code (usually a dictionary) into a code block.
+    """
+    return """```%s
+%s
+```""" % (
+        language,
+        code,
+    )
+
+
+## Identifier hashes
+
+
+def generate_identifier_hash(identifier):
+    """generate a unique identifier (hash) for the issue"""
+    hash_object = hashlib.md5(identifier.encode("utf-8"))
+    return "md5.%s" % hash_object.hexdigest()
