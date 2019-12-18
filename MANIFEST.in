@@ -2,3 +2,5 @@ include README.md LICENSE
 recursive-include helpme *
 global-exclude *.py[co]
 global-exclude __pycache__
+prune docs
+prune .docs
