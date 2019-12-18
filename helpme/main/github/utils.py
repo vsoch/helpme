@@ -21,6 +21,8 @@ from helpme.logger import bot
 import sys
 import requests
 import json
+import urllib
+import webbrowser
 
 
 def create_issue(title, body, repo, token):
@@ -59,3 +61,29 @@ def create_issue(title, body, repo, token):
         bot.error("Cannot create issue %s" % title)
         bot.error(response.content)
         sys.exit(1)
+
+
+def open_issue(title, body, repo):
+    """open a GitHub issue given a title, body, and repository. Does not
+       rely on the GitHub API, but instead opens a browser URL.
+
+       Parameters
+       ==========
+       title: the issue title
+       body: the issue body
+       repo: the full name of the repo
+    """
+    owner, name = repo.split("/")
+
+    # Title is best separated with +
+    title = title.replace(" ", "+")
+    body = urllib.parse.quote(body)
+    url = "https://github.com/%s/%s/issues/new?labels=bug&title=%s&body=%s" % (
+        owner,
+        name,
+        title,
+        body,
+    )
+    bot.info("Browser opening to:")
+    bot.info(url)
+    webbrowser.open_new(url)

@@ -24,6 +24,8 @@ import os
 
 
 def main(args, extra):
-    from helpme.main import get_helper
+    """Configure a client for the user"""
+    from helpme.main.base.settings import get_configfile_user
 
-    print("This will configure a client for the user")
+    config_file = get_configfile_user()
+    bot.info("Configuration file is generated at %s" % config_file)

@@ -49,4 +49,4 @@ def get_helper(name=None, quiet=True, **kwargs):
     Helper.quiet = quiet
 
     # Initialize the database
-    return Helper()
+    return Helper(**kwargs)

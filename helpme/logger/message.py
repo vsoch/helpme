@@ -68,8 +68,9 @@ class HelpMeMessage:
 
     def useColor(self):
         """useColor will determine if color should be added
-        to a print. Will check if being run in a terminal, and
-        if has support for asci"""
+           to a print. Will check if being run in a terminal, and
+           if has support for ascii
+        """
         COLORIZE = get_user_color_preference()
         if COLORIZE is not None:
             return COLORIZE
@@ -83,7 +84,8 @@ class HelpMeMessage:
 
     def addColor(self, level, text):
         """addColor to the prompt (usually prefix) if terminal
-        supports, and specified to do so"""
+           supports, and specified to do so
+        """
         if self.colorize:
             if level in self.colors:
                 text = "%s%s%s" % (self.colors[level], text, self.colors["OFF"])
@@ -91,7 +93,8 @@ class HelpMeMessage:
 
     def emitError(self, level):
         """determine if a level should print to
-        stderr, includes all levels but INFO and QUIET"""
+           stderr, includes all levels but INFO and QUIET
+        """
         if level in [
             ABORT,
             ERROR,
@@ -107,7 +110,8 @@ class HelpMeMessage:
 
     def emitOutput(self, level):
         """determine if a level should print to stdout
-        only includes INFO"""
+           only includes INFO
+        """
         if level in [LOG, INFO]:
             return True
         return False
@@ -121,10 +125,13 @@ class HelpMeMessage:
 
     def emit(self, level, message, prefix=None, color=None):
         """emit is the main function to print the message
-        optionally with a prefix
-        :param level: the level of the message
-        :param message: the message to print
-        :param prefix: a prefix for the message
+           optionally with a prefix
+        
+           Params
+           ======
+           level: the level of the message
+           message: the message to print
+           prefix: a prefix for the message
         """
         if color is None:
             color = level
@@ -157,7 +164,7 @@ class HelpMeMessage:
 
     def write(self, stream, message):
         """write will write a message to a stream,
-        first checking the encoding
+           first checking the encoding
         """
         if isinstance(message, bytes):
             message = message.decode("utf-8")
@@ -165,7 +172,7 @@ class HelpMeMessage:
 
     def get_logs(self, join_newline=True):
         """'get_logs will return the complete history, joined by newline
-        (default) or as is.
+            (default) or as is.
         """
         if join_newline:
             return "\n".join(self.history)
@@ -183,9 +190,12 @@ class HelpMeMessage:
         symbol=None,
     ):
         """create a terminal progress bar, default bar shows for verbose+
-        :param iteration: current iteration (Int)
-        :param total: total iterations (Int)
-        :param length: character length of bar (Int)
+        
+           Parameters
+           ==========
+           iteration: current iteration (Int)
+           total: total iterations (Int)
+           length: character length of bar (Int)
         """
         percent = 100 * (iteration / float(total))
         progress = int(length * iteration // total)
@@ -230,6 +240,10 @@ class HelpMeMessage:
     def error(self, message):
         self.emit(ERROR, message, "ERROR")
 
+    def exit(self, message, error_code=1):
+        self.emit(ERROR, message, "ERROR")
+        sys.exit(error_code)
+
     def warning(self, message):
         self.emit(WARNING, message, "WARNING")
 
@@ -271,8 +285,8 @@ class HelpMeMessage:
 
     def table(self, rows, col_width=2):
         """table will print a table of entries. If the rows is 
-        a dictionary, the keys are interpreted as column names. if
-        not, a numbered list is used.
+           a dictionary, the keys are interpreted as column names. if
+           not, a numbered list is used.
         """
 
         labels = [str(x) for x in range(1, len(rows) + 1)]
@@ -289,9 +303,9 @@ class HelpMeMessage:
 
 def get_logging_level():
     """get_logging_level will configure a logging to standard out based on the user's
-    selected level, which should be in an environment variable called
-    MESSAGELEVEL. if MESSAGELEVEL is not set, the maximum level
-    (5) is assumed (all messages).
+       selected level, which should be in an environment variable called
+       MESSAGELEVEL. if MESSAGELEVEL is not set, the maximum level
+        (5) is assumed (all messages).
     """
     try:
         level = int(os.environ.get("MESSAGELEVEL", INFO))
@@ -332,7 +346,8 @@ def get_user_color_preference():
 
 def convert2boolean(arg):
     """convert2boolean is used for environmental variables that must be
-    returned as boolean"""
+       returned as boolean
+    """
     if not isinstance(arg, bool):
         return arg.lower() in ("yes", "true", "t", "1", "y")
     return arg

@@ -53,6 +53,7 @@ class HelperBase(object):
         self._version = __version__
         self.config = self._load_config()
         self.config_user = self._load_config_user()
+        self.confirm = kwargs.get("confirm", True)
         self.load_secrets()
 
         # Data and variables collected from the user
@@ -81,11 +82,8 @@ class HelperBase(object):
              _start) that is implemented by the helper class to do custom
              operations for the helper.             
         """
-        # Step 0: Each run session is given a fun name
+        # Step 1: Each run session is given a fun name
         self.run_id = RobotNamer().generate()
-
-        # Step 1: get config steps
-        steps = self.config._sections[self.name]
 
         # Step 2: Start the helper (announce and run start, which is init code)
         self.start(positionals)
@@ -93,11 +91,19 @@ class HelperBase(object):
         # Step 3: Iterate through flow, check each step for known record/prompt,
         #         and collect outputs appropriately
 
-        for step, content in steps.items():
+        for step, content in self.steps:
             self.collect(step, content)
 
         # Step 4: When data collected, pass data structures to submit
         self.submit()
+
+    def run_headless(self, positionals=None, **kwargs):
+        """run a headless helper procedure, meaning that the title, body,
+           and other content must be provided to the function. Command line
+           arguments such a a GitHub repository or discourse board would be
+           provided as positionals, and everything else is passed as kwargs.
+        """
+        bot.warning("run_headless must be implemented by the Helper class.")
 
     def start(self, positionals=None):
         """start the helper flow. We check helper system configurations to
@@ -129,17 +135,27 @@ class HelperBase(object):
 
     # Collectors
 
+    @property
+    def steps(self):
+        """Yield steps to the calling client.
+        """
+        steps = self.config._sections[self.name]
+        for step, content in steps.items():
+            yield step, content
+
     def collect(self, step, content):
         """given a name of a configuration key and the provided content, collect
            the required metadata from the user.
  
            Parameters
            ==========
+           headless: run the collection headless (no prompts)
            step: the key in the configuration. Can be one of:
                    user_message_<name>
                    runtime_arg_<name>
                    record_asciinema
                    record_environment
+                   record_system
                    user_prompt_<name>
            content: the default value or boolean to indicate doing the step.
         """
@@ -160,6 +176,9 @@ class HelperBase(object):
         elif step == "record_environment":
             self.record_environment()
 
+        elif step == "record_system":
+            self.record_system()
+
         bot.debug(self.data)
 
     def collect_argument(self, step, message):
@@ -178,13 +197,21 @@ class HelperBase(object):
 
     # Recorders
 
-    def record_environment(self):
+    def record_system(self):
+        """collect a information about Python and the current system.
+           A dictionary of metrics is stored.
+        """
+        from helpme.utils import MetricsCollector
+
+        collector = MetricsCollector()
+        self.data["record_system"] = collector.metrics
+
+    def record_environment(self, headless=False):
         """collect a limited set of environment variables based on the list
            under record_envirionment in the configuration file.
         """
 
         # whitelist is a newline separated list under record_environment
-
         envars = self._get_setting(
             name="whitelist", section="record_environment", user=False
         )
@@ -192,20 +219,19 @@ class HelperBase(object):
         if envars is not None:
 
             # User uppercase
-
             envars = [x.upper() for x in envars.split("\n")]
 
             # Make transparent for the user
-
             bot.custom(prefix="Environment ", message="|".join(envars), color="CYAN")
 
             # Iterate through and collect based on name
-
             keep = [(k, v) for k, v in os.environ.items() if k.upper() in envars]
 
             # Ask the user for permission
-
-            if confirm_prompt("Is this list ok to share?"):
+            if self.confirm:
+                if confirm_prompt("Is this list ok to share?"):
+                    self.data["record_environment"] = keep
+            else:
                 self.data["record_environment"] = keep
 
     def record_asciinema(self):
@@ -221,7 +247,6 @@ class HelperBase(object):
         """
 
         # If the user already provided a file, we don't need to ask again
-
         if "record_asciinema" not in self.data:
 
             if confirm_prompt("Would you like to send a terminal recording?"):

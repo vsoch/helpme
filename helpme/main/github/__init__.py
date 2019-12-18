@@ -19,10 +19,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from helpme.main import HelperBase
 from helpme.action import record_asciinema, upload_asciinema
-from helpme.logger import bot
-from helpme.utils import envars_to_markdown
-from .utils import create_issue
+from helpme.logger import bot, RobotNamer
+from helpme.utils import envars_to_markdown, format_code_block, generate_identifier_hash
+from .utils import create_issue, open_issue
 import os
+import re
 import sys
 
 
@@ -30,11 +31,26 @@ class Helper(HelperBase):
     def __init__(self, **kwargs):
 
         self.name = "github"
+
+        # The client can require a GitHub token, if headless
+        self.require_token = kwargs.get("require_token", False)
         super(Helper, self).__init__(**kwargs)
 
     def load_secrets(self):
+        """load secrets, namely the GitHub token, check if required and
+           exit if not provided
+        """
         self.token = self._get_and_update_setting("HELPME_GITHUB_TOKEN")
-        self.check_env("HELPME_GITHUB_TOKEN", self.token)
+
+        # If the user wants to use a token for the GitHub API
+        if not self.token:
+            if self.require_token:
+                bot.exit("HELPME_GITHUB_TOKEN is required")
+            bot.warning(
+                "HELPME_GITHUB_TOKEN not found, "
+                "will attempt to open browser manually "
+                "If you have trouble submitting an issue, export it."
+            )
 
     def check_env(self, envar, value):
         """ensure that variable envar is set to some value, 
@@ -50,10 +66,47 @@ class Helper(HelperBase):
             print("https://vsoch.github.io/helpme/helper-github")
             sys.exit(1)
 
+    def run_headless(self, repo, title=None, body="", identifier=None):
+        """run a headless helper procedure, meaning that the title, body,
+           and other content must be provided to the function. Command line
+           arguments such a a GitHub repository or discourse board must 
+           also be provided.
+
+           Parameters
+           ==========
+           repo: the repository (full name) to submit to
+           title: the title of the issue to open
+           body: additional content for the body of the request
+           identifier: if provided, generate hash based on identifier
+        """
+        self.run_id = RobotNamer().generate()
+        self.data["user_prompt_repo"] = repo
+        self.config.remove_option("github", "user_prompt_repo")
+
+        # Update config with other user provided variables
+        self.data["user_prompt_issue"] = body
+
+        # If title is None, create for user
+        if title is None:
+            title = "[helpme] issue report"
+        self.data["user_prompt_title"] = title
+
+        # If the identifier is provided, add to data.
+        if identifier is not None:
+            self.data["md5"] = generate_identifier_hash(identifier)
+            self.data["md5_source"] = identifier
+
+        # We can only run steps that don't require user interaction
+        skip = "^(%s)" % "|".join(["record_asciinema", "user_"])
+        for step, content in self.steps:
+            if not re.search(skip, step):
+                self.collect(step, content)
+
+        self.submit()
+
     def _start(self, positionals):
-
-        # If the user provides a repository name, use it
-
+        """If the user provides a repository name, use it
+        """
         if positionals:
             self.data["user_prompt_repo"] = positionals[0]
             self.config.remove_option("github", "user_prompt_repo")
@@ -67,18 +120,29 @@ class Helper(HelperBase):
             'record_asciinema': '/tmp/helpme.93o__nt5.json',
             'record_environment': ((1,1),(2,2)...(N,N))}
 
-           self.token should be propogated with the personal access token
+           self.token should be propogated with the personal access token,
+           or None if one was not provided.
         """
         body = self.data["user_prompt_issue"]
         title = self.data["user_prompt_title"]
         repo = self.data["user_prompt_repo"]
 
-        # Step 1: Environment
+        # Step 1: Environment and System Details
 
-        envars = self.data.get("record_environment")
-        body = body + envars_to_markdown(envars)
+        envars = self.data.get("record_environment", [])
+        system = self.data.get("record_system")
 
-        # Step 2: Asciinema
+        details = "<details>\n\n%s" % envars_to_markdown(envars)
+        if system is not None:
+            details = details + "\n## System\n %s\n" % format_code_block(system)
+        details += "</details>"
+        body = "%s\n%s" % (body, details)
+
+        # Step 2: Identifier
+
+        identifier = self.data.get("md5", self.run_id)
+
+        # Step 3: Asciinema
 
         asciinema = self.data.get("record_asciinema")
         if asciinema not in [None, ""]:
@@ -92,9 +156,12 @@ class Helper(HelperBase):
         # Add other metadata about client
 
         body += "\n\ngenerated by [HelpMe](https://vsoch.github.io/helpme/)"
-        body += "\nHelpMe Github Issue: %s" % (self.run_id)
+        body += "\nHelpMe Github Issue: %s" % (identifier)
 
         # Submit the issue
 
-        issue = create_issue(title, body, repo, self.token)
+        if self.token is not None:
+            issue = create_issue(title, body, repo, self.token)
+        else:
+            issue = open_issue(title, body, repo)
         return issue

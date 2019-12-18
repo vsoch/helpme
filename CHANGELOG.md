@@ -14,7 +14,8 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/singularityhub/sregistry-cli/tree/master) (0.0.x)
- - adding GitHub CI and linting with black (0.0.36) 
+ - GitHub submit via link (without token) option added (0.0.39)
+ - adding GitHub CI and linting with black (0.0.36)
  - fixing package data (0.0.35) 
  - adding MANIFEST.in to include data files (0.0.34) 
  - fixing import bug (0.0.33) 
