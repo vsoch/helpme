@@ -66,7 +66,7 @@ class Helper(HelperBase):
             print("https://vsoch.github.io/helpme/helper-github")
             sys.exit(1)
 
-    def run_headless(self, repo, title=None, body="", identifier=None):
+    def run_headless(self, repo, title=None, body="", identifier=None, prefix="helpme"):
         """run a headless helper procedure, meaning that the title, body,
            and other content must be provided to the function. Command line
            arguments such a a GitHub repository or discourse board must 
@@ -88,8 +88,8 @@ class Helper(HelperBase):
 
         # If title is None, create for user
         if title is None:
-            title = "[helpme] issue report"
-        self.data["user_prompt_title"] = title
+            title = "issue report"
+        self.data["user_prompt_title"] = "[%s] %s" % (prefix, title)
 
         # If the identifier is provided, add to data.
         if identifier is not None:
