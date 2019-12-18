@@ -17,7 +17,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 """
 
-__version__ = "0.0.39"
+__version__ = "0.0.40"
 AUTHOR = "Vanessa Sochat"
 AUTHOR_EMAIL = "vsochat@stanford.edu"
 NAME = "helpme"
@@ -31,18 +31,15 @@ LICENSE = "LICENSE"
 # Global requirements
 
 
-INSTALL_REQUIRES = (
-    ("requests", {"min_version": "2.18.4"}),
-    ("asciinema", {"min_version": "2.0.1"}),
-)
+INSTALL_REQUIRES = (("requests", {"min_version": "2.18.4"}),)
 
 ################################################################################
 # Submodule Requirements
 
-
+INSTALL_ASCIINEMA = (("asciinema", {"min_version": "2.0.1"}),)
 INSTALL_USERVOICE = (("uservoice", {"min_version": "0.0.23"}),)
-
-
 INSTALL_DISCOURSE = (("pycryptodome", {"min_version": "3.7.2"}),)
 
-INSTALL_ALL = INSTALL_REQUIRES + INSTALL_USERVOICE + INSTALL_DISCOURSE
+INSTALL_ALL = (
+    INSTALL_REQUIRES + INSTALL_USERVOICE + INSTALL_DISCOURSE + INSTALL_ASCIINEMA
+)

@@ -4,18 +4,9 @@
 
 Copyright (C) 2018-2020 Vanessa Sochat.
 
-This program is free software: you can redistribute it and/or modify it
-under the terms of the GNU Affero General Public License as published by
-the Free Software Foundation, either version 3 of the License, or (at your
-option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public
-License for more details.
-
-You should have received a copy of the GNU Affero General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+This Source Code Form is subject to the terms of the
+Mozilla Public License, v. 2.0. If a copy of the MPL was not distributed
+with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 """
 
@@ -85,6 +76,7 @@ if __name__ == "__main__":
 
     INSTALL_REQUIRES = get_reqs(lookup, "INSTALL_ALL")
     INSTALL_USERVOICE = get_reqs(lookup, "INSTALL_USERVOICE")
+    INSTALL_ASCIINEMA = get_reqs(lookup, "INSTALL_ASCIINEMA")
     INSTALL_DISCOURSE = get_reqs(lookup, "INSTALL_DISCOURSE")
 
     setup(
@@ -106,13 +98,14 @@ if __name__ == "__main__":
         install_requires=INSTALL_REQUIRES,
         extras_require={
             "all": [INSTALL_REQUIRES],
+            "asciinema": [INSTALL_ASCIINEMA],
             "uservoice": [INSTALL_USERVOICE],
             "discourse": [INSTALL_DISCOURSE],
         },
         classifiers=[
             "Intended Audience :: Science/Research",
             "Intended Audience :: Developers",
-            "License :: OSI Approved :: MIT License",
+            "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
             "Programming Language :: C",
             "Programming Language :: Python",
             "Topic :: Software Development",
