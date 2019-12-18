@@ -83,4 +83,4 @@ have a question, or did you find a bug? You can [submit an issue](https://www.gi
 
 ## License
 
-This code is licensed under the Affero GPL, version 3.0 or later [LICENSE](LICENSE).
+This code is licensed under the Mozilla version 2.0 [LICENSE](LICENSE).
