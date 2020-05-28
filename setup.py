@@ -74,7 +74,9 @@ with open("README.md") as filey:
 
 if __name__ == "__main__":
 
-    INSTALL_REQUIRES = get_reqs(lookup, "INSTALL_ALL")
+    INSTALL_ALL = get_reqs(lookup, "INSTALL_ALL")
+    INSTALL_GITHUB = get_reqs(lookup, "INSTALL_GITHUB")
+    INSTALL_REQUIRES = get_reqs(lookup, "INSTALL_REQUIRES")
     INSTALL_USERVOICE = get_reqs(lookup, "INSTALL_USERVOICE")
     INSTALL_ASCIINEMA = get_reqs(lookup, "INSTALL_ASCIINEMA")
     INSTALL_DISCOURSE = get_reqs(lookup, "INSTALL_DISCOURSE")
@@ -97,10 +99,11 @@ if __name__ == "__main__":
         keywords=KEYWORDS,
         install_requires=INSTALL_REQUIRES,
         extras_require={
-            "all": [INSTALL_REQUIRES],
+            "all": [INSTALL_ALL],
             "asciinema": [INSTALL_ASCIINEMA],
             "uservoice": [INSTALL_USERVOICE],
             "discourse": [INSTALL_DISCOURSE],
+            "github": [INSTALL_GITHUB],
         },
         classifiers=[
             "Intended Audience :: Science/Research",
