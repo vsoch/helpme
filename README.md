@@ -10,6 +10,7 @@ A command line helper when you need it.
  - [Installation](#installation)
  - [Usage](#usage)
  - [Contributing](#contributing)
+ - [Examples](#examples)
 
 [![DOI](http://joss.theoj.org/papers/10.21105/joss.00775/status.svg)](https://doi.org/10.21105/joss.00775)
 [![GitHub actions status](https://github.com/vsoch/helpme/workflows/helpme-ci/badge.svg?branch=master)](https://github.com/vsoch/helpme/actions?query=branch%3Amaster+workflow%3Ahelpme-ci)
@@ -48,16 +49,19 @@ pip install helpme[uservoice]
 
 ## Docker
 
+Current images are provided on quay.io at [vanessa/helpme](https://quay.io/repository/vanessa/helpme?tab=tags).
+Older versions can be found on [Docker hub](hub.docker.com/r/vanessa/helpme).
+
 You can use the image built on Docker Hub directory
 
 ```bash
-$ docker run -it --entrypoint bash vanessa/helpme
+$ docker run -it --entrypoint bash quay.io/vanessa/helpme
 ```
 
 or you can build it from this repository!
 
 ```bash
-$ docker build -t vanessa/helpme .
+$ docker build -t quay.io/vanessa/helpme .
 ```
 
 # Usage
@@ -80,6 +84,10 @@ This is a very brief summary of usage. For complete details, see our [documentat
 If you'd like to contribute, we welcome pull requests, feature requests, and any form of help you
 might offer! Please see our [contributing guidelines](.github/CONTRIBUTING.md) for more details. Do you
 have a question, or did you find a bug? You can [submit an issue](https://www.github.com/vsoch/helpme/issues) and we will help you out.
+
+## Examples
+
+ - [rseng-support](https://github.com/rseng/github-support) an example issue submission system with helpme and GitHub
 
 ## License
 

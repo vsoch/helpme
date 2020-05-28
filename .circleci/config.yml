@@ -12,6 +12,7 @@ workflows:
           image: vanessa/helpme
           deploy: false
           tag: latest
+          registry: quay.io
           filters:
             branches:
               ignore: 
@@ -30,6 +31,7 @@ workflows:
       - docker-publish/publish:
           image: vanessa/helpme
           tag: latest
+          registry: quay.io
           filters:
             branches:
              only: master
