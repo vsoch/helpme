@@ -41,4 +41,6 @@ workflows:
                 command: |
                    DOCKER_TAG=$(docker run vanessa/helpme:latest --version)
                    echo "Version for Docker tag is ${DOCKER_TAG}"
-                   docker tag vanessa/helpme:latest vanessa/helpme:${DOCKER_TAG}
+                   docker tag vanessa/helpme:latest quay.io/vanessa/helpme:${DOCKER_TAG}
+                   docker push quay.io/vanessa/helpme:${DOCKER_TAG}
+                   quay.io/vanessa/helpme:latest
