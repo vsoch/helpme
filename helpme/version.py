@@ -8,7 +8,7 @@ with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 """
 
-__version__ = "0.0.40"
+__version__ = "0.0.41"
 AUTHOR = "Vanessa Sochat"
 AUTHOR_EMAIL = "vsochat@stanford.edu"
 NAME = "helpme"
@@ -23,6 +23,7 @@ LICENSE = "LICENSE"
 
 
 INSTALL_REQUIRES = (("requests", {"min_version": "2.18.4"}),)
+INSTALL_GITHUB = INSTALL_REQUIRES
 
 ################################################################################
 # Submodule Requirements
