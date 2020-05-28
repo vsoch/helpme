@@ -142,7 +142,7 @@ def main():
     # if environment logging variable not set, make silent
 
     if args.debug is False:
-        os.environ["MESSAGELEVEL"] = "INFO"
+        os.environ["HELPME_MESSAGELEVEL"] = "INFO"
 
     # Show the version and exit
     if args.version is True:

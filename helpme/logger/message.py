@@ -295,15 +295,15 @@ class HelpMeMessage:
 def get_logging_level():
     """get_logging_level will configure a logging to standard out based on the user's
        selected level, which should be in an environment variable called
-       MESSAGELEVEL. if MESSAGELEVEL is not set, the maximum level
+       HELPME_MESSAGELEVEL. if HELPME_MESSAGELEVEL is not set, the maximum level
         (5) is assumed (all messages).
     """
     try:
-        level = int(os.environ.get("MESSAGELEVEL", INFO))
+        level = int(os.environ.get("HELPME_MESSAGELEVEL", INFO))
 
     except ValueError:
 
-        level = os.environ.get("MESSAGELEVEL", INFO)
+        level = os.environ.get("HELPME_MESSAGELEVEL", INFO)
         if level == "CRITICAL":
             return CRITICAL
         elif level == "ABORT":
