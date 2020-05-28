@@ -14,6 +14,7 @@ and **Merged pull requests**. Critical items to know are:
 The versions coincide with releases on pip. Only major versions will be released as tags on Github.
 
 ## [0.0.x](https://github.com/singularityhub/sregistry-cli/tree/master) (0.0.x)
+ - changing MESSAGELEVEL environment variable to HELPME_MESSAGELEVEL (0.0.42)
  - basic install should not include all extra requirements (0.0.41)
  - asciinema shouldn't be required for base function (0.0.40)
  - GitHub submit via link (without token) option added (0.0.39)
