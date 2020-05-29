@@ -57,7 +57,15 @@ class Helper(HelperBase):
             print("https://vsoch.github.io/helpme/helper-github")
             sys.exit(1)
 
-    def run_headless(self, repo, title=None, body="", identifier=None, prefix="helpme"):
+    def run_headless(
+        self,
+        repo,
+        title=None,
+        body="",
+        identifier=None,
+        prefix="helpme",
+        generate_md5=True,
+    ):
         """run a headless helper procedure, meaning that the title, body,
            and other content must be provided to the function. Command line
            arguments such a a GitHub repository or discourse board must 
@@ -69,6 +77,7 @@ class Helper(HelperBase):
            title: the title of the issue to open
            body: additional content for the body of the request
            identifier: if provided, generate hash based on identifier
+           generate_md5: if True, convert the identifier string into md5
         """
         self.run_id = RobotNamer().generate()
         self.data["user_prompt_repo"] = repo
@@ -84,8 +93,11 @@ class Helper(HelperBase):
 
         # If the identifier is provided, add to data.
         if identifier is not None:
-            self.data["md5"] = generate_identifier_hash(identifier)
-            self.data["md5_source"] = identifier
+            if generate_md5:
+                self.data["md5"] = generate_identifier_hash(identifier)
+                self.data["md5_source"] = identifier
+            else:
+                self.data["md5"] = identifier
 
         # We can only run steps that don't require user interaction
         skip = "^(%s)" % "|".join(["record_asciinema", "user_"])
